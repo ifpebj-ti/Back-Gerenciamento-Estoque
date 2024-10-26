@@ -65,15 +65,6 @@ public class UserService implements UserDetailsService {
 		repository.save(user);
 	}
 
-	@Transactional
-	public void activateUser(UUID id) {
-		Optional<User> obj = repository.findById(id);
-		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
-		user.setStatus(true);
-		LOG.info("Ativando o usuário " + id);
-		repository.save(user);
-	}
-
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User entity = repository.findByEmail(username);
