@@ -1,14 +1,11 @@
 package com.superestoque.estoque.entities.dto;
 
-import java.util.UUID;
-
-import com.superestoque.estoque.services.validation.UserInsertValid;
+import java.io.Serializable;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-@UserInsertValid
-public class UserInsertDTO extends UserDTO {
+public class UserUpdatePasswordDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -16,8 +13,10 @@ public class UserInsertDTO extends UserDTO {
 	@NotBlank(message = "O campo nome é obrigatório")
 	private String password;
 
-	public UserInsertDTO(UUID id, String name, String email, boolean status, String password) {
-		super(id, name, email, status);
+	public UserUpdatePasswordDTO() {
+	}
+
+	public UserUpdatePasswordDTO(String password) {
 		this.password = password;
 	}
 

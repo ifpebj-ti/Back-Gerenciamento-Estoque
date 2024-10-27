@@ -18,10 +18,10 @@ import com.superestoque.estoque.entities.User;
 import com.superestoque.estoque.entities.dto.RoleDTO;
 import com.superestoque.estoque.entities.dto.UserDTO;
 import com.superestoque.estoque.entities.dto.UserInsertDTO;
+import com.superestoque.estoque.entities.dto.UserUpdatePasswordDTO;
 import com.superestoque.estoque.repositories.RoleRepository;
 import com.superestoque.estoque.repositories.UserRepository;
 import com.superestoque.estoque.services.exceptions.ResourceNotFoundException;
-
 
 @Service
 public class UserService implements UserDetailsService {
@@ -33,16 +33,16 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private RoleRepository roleRepository;
-	
+
 	private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-	
+
 	@Autowired
 	private AuthService authService;
 
 	@Transactional
 	public UserDTO findUserById() {
 		User entity = authService.authenticated();
-		LOG.info("Buscando usuário " + entity.getUsername());
+		LOG.info("Usuário " + entity.getUsername() + " retornado com sucesso!");
 		return new UserDTO(entity, entity.getRoles());
 	}
 
@@ -52,7 +52,7 @@ public class UserService implements UserDetailsService {
 		copyInsertDtoToEntity(user, entity);
 		user.setStatus(true);
 		repository.save(user);
-		LOG.info("Criado usuário");
+		LOG.info("Usuário "+ user.getUsername() + " criado com sucesso!");
 		return new UserDTO(user);
 	}
 
@@ -61,7 +61,7 @@ public class UserService implements UserDetailsService {
 		Optional<User> obj = repository.findById(id);
 		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 		user.setStatus(false);
-		LOG.info("Desativado o usuário " + id);
+		LOG.info("Desativando o usuário " + id+ " com sucesso!");
 		repository.save(user);
 	}
 
@@ -74,6 +74,24 @@ public class UserService implements UserDetailsService {
 		return entity;
 	}
 
+	@Transactional
+	public void updatePassword(UUID id, UserUpdatePasswordDTO entity) {
+		Optional<User> obj = repository.findById(id);
+		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+		updateData(user, entity);
+		user = repository.save(user);
+		LOG.info("Atualizado senha do usuário " + id + " com sucesso!");
+	}
+
+	@Transactional
+	public void updateRole(UUID id, Long roleId) {
+		Optional<User> obj = repository.findById(id);
+		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+		updateUserRole(user, roleId);
+		user = repository.save(user);
+		LOG.info("Atualizado perfil do usuário " + id+ " para o perfil "+ roleId+ " com sucesso!");
+	}
+
 	private void copyInsertDtoToEntity(User user, UserInsertDTO dto) {
 		user.setName(dto.getName());
 		user.setPassword(encoder.encode(dto.getPassword()));
@@ -82,5 +100,17 @@ public class UserService implements UserDetailsService {
 			Role roleEntity = roleRepository.getReferenceById(role.getId());
 			user.getRoles().add(roleEntity);
 		}
+	}
+
+	private void updateData(User user, UserUpdatePasswordDTO entity) {
+		user.setPassword(encoder.encode(entity.getPassword()));
+		LOG.info("Atualizado senha do usuário");
+	}
+
+	private void updateUserRole(User user, Long roleId) {
+		Optional<Role> obj = roleRepository.findById(roleId);
+		Role role = obj.orElseThrow(() -> new ResourceNotFoundException("Role não encontrada."));
+		user.getRoles().clear();
+		user.getRoles().add(role);
 	}
 }

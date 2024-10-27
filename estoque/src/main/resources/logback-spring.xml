@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<!-- Define o diretório de logs -->
+	<property name="./logs" value="logs" />
+
+	<!-- Appender para logs no console -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Appender para logs gerais com todos os níveis (INFO, ERROR, WARN,
+	DEBUG, etc.) -->
+	<appender name="GENERAL"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>./logs/application.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>./logs/application-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>365</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Appender para user service, com todos os níveis de log -->
+	<appender name="USER_SERVICE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>./logs/user_service.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>./logs/user_service-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>365</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Appender para company service, com todos os níveis de log -->
+	<appender name="COMPANY_SERVICE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>./logs/company_service.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>./logs/company_service-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>365</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Logger para user service-->
+	<logger name="com.superestoque.estoque.services.UserService" level="INFO"
+		additivity="false">
+		<appender-ref ref="USER_SERVICE" />
+	</logger>
+
+	<!-- Logger para company service -->
+	<logger name="com.superestoque.estoque.services.CompanyService" level="INFO"
+		additivity="false">
+		<appender-ref ref="COMPANY_SERVICE" />
+	</logger>
+
+	<!-- Logger geral com nível INFO -->
+	<root level="INFO">
+		<appender-ref ref="GENERAL" />
+		<appender-ref ref="CONSOLE" />
+	</root>
+
+</configuration>
