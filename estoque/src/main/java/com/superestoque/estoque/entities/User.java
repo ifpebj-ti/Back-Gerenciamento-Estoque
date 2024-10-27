@@ -21,6 +21,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -39,6 +40,9 @@ public class User implements Serializable, UserDetails {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
+	@ManyToOne
+	@JoinColumn(name = "company_id")
+	private Company company;
 
 	public User() {
 	}
@@ -100,6 +104,10 @@ public class User implements Serializable, UserDetails {
 
 	public Set<Role> getRoles() {
 		return roles;
+	}
+
+	public Company getCompany() {
+		return company;
 	}
 
 	public boolean hasRole(String roleName) {

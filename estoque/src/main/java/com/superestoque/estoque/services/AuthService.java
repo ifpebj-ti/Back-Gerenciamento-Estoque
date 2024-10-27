@@ -32,7 +32,7 @@ public class AuthService {
 					.getAuthentication();
 			Jwt jwt = (Jwt) jwtToken.getPrincipal();
 			String username = jwt.getClaimAsString("username");
-			LOG.info("Retornando usuário logado com o email " + username);
+			LOG.info("Retornando usuário logado com o email " + username + " com sucesso!");
 			return userRepository.findByEmail(username);
 		} catch (Exception e) {
 			throw new UnauthorizedException("Usuário inválido");
@@ -41,7 +41,7 @@ public class AuthService {
 
 	public void validateSelfOrAdmin(UUID userId) {
 		User user = authenticated();
-		if (!user.getId().equals(userId) && !user.hasRole("ROLE_ADMIN")) {
+		if (!user.hasRole("ROLE_ADMIN")) {
 			throw new ForbiddenException("Acesso negado");
 		}
 	}
