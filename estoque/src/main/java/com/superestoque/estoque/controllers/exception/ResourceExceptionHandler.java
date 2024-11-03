@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.superestoque.estoque.services.exceptions.ForbiddenException;
 import com.superestoque.estoque.services.exceptions.ResourceNotFoundException;
 import com.superestoque.estoque.services.exceptions.UnauthorizedException;
+import com.superestoque.estoque.services.exceptions.ValidMultiFormDataException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -53,5 +54,16 @@ public class ResourceExceptionHandler {
 	public ResponseEntity<OAuthCustomError> unauthorized(UnauthorizedException e, HttpServletRequest request) {
 		OAuthCustomError err = new OAuthCustomError("Unauthorized", e.getMessage());
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(err);
+	}
+
+	@ExceptionHandler(ValidMultiFormDataException.class)
+	public ResponseEntity<StandardError> formDataInvalid(ValidMultiFormDataException e, HttpServletRequest request) {
+		StandardError err = new StandardError();
+		err.setTimestamp(Instant.now());
+		err.setStatus(HttpStatus.NOT_FOUND.value());
+		err.setError("Erro de validação");
+		err.setMessage(e.getMessage());
+		err.setPath(request.getRequestURI());
+		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY.value()).body(err);
 	}
 }
