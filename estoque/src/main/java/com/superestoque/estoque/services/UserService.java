@@ -47,7 +47,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	@Transactional
-	public UserDTO saveUser(UserInsertDTO entity) {
+	public UserDTO saveNewUser(UserInsertDTO entity) {
 		User user = new User();
 		copyInsertDtoToEntity(user, entity);
 		user.setStatus(true);

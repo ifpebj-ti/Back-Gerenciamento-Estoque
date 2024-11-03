@@ -56,8 +56,8 @@ public class UserController {
 			@ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationError.class))) })
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
-	public ResponseEntity<UserDTO> save(@Valid @RequestBody UserInsertDTO dto) {
-		UserDTO entity = service.saveUser(dto);
+	public ResponseEntity<UserDTO> saveNewUser(@Valid @RequestBody UserInsertDTO user) {
+		UserDTO entity = service.saveNewUser(user);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(entity.getId()).toUri();
 		return ResponseEntity.created(uri).body(entity);
 	}

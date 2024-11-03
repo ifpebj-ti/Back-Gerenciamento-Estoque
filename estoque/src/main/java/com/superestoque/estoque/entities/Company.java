@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import org.hibernate.annotations.UuidGenerator;
 
+import com.superestoque.estoque.entities.dto.CompanyDTO;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,6 +33,8 @@ public class Company implements Serializable {
 	private byte[] photo;
 	@OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<User> users = new HashSet<>();
+	@OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
+	private Set<Product> products = new HashSet<>();
 
 	public Company() {
 	}
@@ -40,6 +44,13 @@ public class Company implements Serializable {
 		this.name = name;
 		this.cnpj = cnpj;
 		this.photo = photo;
+	}
+
+	public Company(CompanyDTO entity) {
+		this.id = entity.getId();
+		this.name = entity.getName();
+		this.cnpj = entity.getCnpj();
+		this.photo = entity.getPhoto();
 	}
 
 	public UUID getId() {
