@@ -9,9 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - name: List files to confirm path
+        run: ls -al
+
     - name: build
       run: |
-          cd ../../estoque
+          cd ../estoque
           mvn clean package -DskipTests -X
 
     - name: Checkout
