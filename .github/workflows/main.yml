@@ -10,7 +10,7 @@ jobs:
     steps:
 
     - name: List files to confirm path
-        run: ls -al
+      run: ls -al
 
     - name: build
       run: |
