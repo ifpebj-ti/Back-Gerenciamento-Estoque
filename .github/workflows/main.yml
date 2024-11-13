@@ -8,6 +8,12 @@ jobs:
     name: Build and Push to ECR
     runs-on: ubuntu-latest
     steps:
+
+    - name: build
+      script: |
+          cd estoque
+          mvn clean package -DskipTests -X
+
     - name: Checkout
       uses: actions/checkout@v2
 
