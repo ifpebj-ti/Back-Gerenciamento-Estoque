@@ -23,7 +23,7 @@ jobs:
     - name: build
       run: |
           cd estoque
-          mvn clean package -DskipTests -X
+          mvn clean package -X
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
