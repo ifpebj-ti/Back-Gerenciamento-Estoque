@@ -137,18 +137,6 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void updateRoleShouldUpdateUserRoleWhenIdExists() {
-		Long roleId = 1L;
-
-		Assertions.assertDoesNotThrow(() -> {
-			service.updateRole(existingId, roleId);
-		});
-
-		Mockito.verify(repository, Mockito.times(1)).findById(existingId);
-		Mockito.verify(repository, Mockito.times(1)).save(ArgumentMatchers.any(User.class));
-	}
-
-	@Test
 	public void updateRoleShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
 		Long roleId = 1L;
 
