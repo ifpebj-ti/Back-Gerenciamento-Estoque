@@ -10,7 +10,7 @@ jobs:
     steps:
 
     - name: build
-      script: |
+      run: |
           cd estoque
           mvn clean package -DskipTests -X
 
