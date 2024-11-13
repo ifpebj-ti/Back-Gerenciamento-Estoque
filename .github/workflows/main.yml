@@ -9,16 +9,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: List files to confirm path
-      run: ls -al
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+
+    - name: print o diretorio atual
+      run: pwd
 
     - name: build
       run: |
           cd estoque
           mvn clean package -DskipTests -X
-
-    - name: Checkout
-      uses: actions/checkout@v2
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
