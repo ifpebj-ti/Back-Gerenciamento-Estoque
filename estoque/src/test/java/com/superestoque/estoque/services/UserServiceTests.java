@@ -113,6 +113,18 @@ public class UserServiceTests {
 	}
 
 	@Test
+	public void updatePasswordShouldUpdateUserPasswordWhenIdExists() {
+		UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO("newPassword123");
+
+		Assertions.assertDoesNotThrow(() -> {
+			service.updatePassword(existingId, dto);
+		});
+
+		Mockito.verify(repository, Mockito.times(1)).findById(existingId);
+		Mockito.verify(repository, Mockito.times(1)).save(ArgumentMatchers.any(User.class));
+	}
+
+	@Test
 	public void updatePasswordShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
 		UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO("newPassword123");
 
@@ -122,6 +134,18 @@ public class UserServiceTests {
 
 		Mockito.verify(repository, Mockito.times(1)).findById(nonExistingId);
 		Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any(User.class));
+	}
+
+	@Test
+	public void updateRoleShouldUpdateUserRoleWhenIdExists() {
+		Long roleId = 1L;
+
+		Assertions.assertDoesNotThrow(() -> {
+			service.updateRole(existingId, roleId);
+		});
+
+		Mockito.verify(repository, Mockito.times(1)).findById(existingId);
+		Mockito.verify(repository, Mockito.times(1)).save(ArgumentMatchers.any(User.class));
 	}
 
 	@Test
