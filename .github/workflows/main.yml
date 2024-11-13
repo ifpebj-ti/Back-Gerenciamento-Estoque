@@ -14,8 +14,11 @@ jobs:
       with:
         submodules: true
 
-    - name: print o diretorio atual
-      run: pwd
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'zulu'   # ou 'zulu' (outras opções de distribuição)
+        java-version: '17'
 
     - name: build
       run: |
