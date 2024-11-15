@@ -18,6 +18,8 @@ public class ProductFactory {
 
 	public static ProductDTO createProductDTO(Company company) {
 		Product product = createProduct(company);
+		product.setPhoto(new byte[1]);
+		product.setCompany(company);
 		return new ProductDTO(product);
 	}
 }
