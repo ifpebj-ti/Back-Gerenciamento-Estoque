@@ -101,8 +101,7 @@ public class ProductController {
 			@RequestParam("unit_value") BigDecimal unitValue, @RequestParam MultipartFile photo) throws IOException {
 		ProductDTO product = new ProductDTO(name, quantity, photo.getBytes(), criticalQuantity, unitValue);
 		ProductDTO entity = service.updateProduct(id, product);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(entity.getId()).toUri();
-		return ResponseEntity.created(uri).body(entity);
+		return ResponseEntity.ok(entity);
 	}
 
 }

@@ -52,7 +52,7 @@ public class CompanyController {
 			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Forbidden\"}"))) })
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = "/{id}", consumes = "multipart/form-data")
-	public ResponseEntity<CompanyDTO> createCompany(@PathVariable UUID id, @RequestParam("name") String name,
+	public ResponseEntity<CompanyDTO> updateCompany(@PathVariable UUID id, @RequestParam("name") String name,
 			@RequestParam("photo") MultipartFile photo) throws IOException {
 		CompanyDTO entity = service.updateDataByUser(id, name, photo);
 		return ResponseEntity.ok(entity);
