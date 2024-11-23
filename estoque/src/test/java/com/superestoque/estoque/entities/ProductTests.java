@@ -19,9 +19,7 @@ public class ProductTests {
 
 		Assertions.assertNotNull(entity.getName());
 		Assertions.assertEquals("Produto 01", entity.getName());
-		Assertions.assertNotNull(entity.getQuantity());
 		Assertions.assertEquals(1, entity.getQuantity());
-		Assertions.assertNotNull(entity.getCritical_quantity());
 		Assertions.assertEquals(2, entity.getCritical_quantity());
 		Assertions.assertNotNull(entity.getUnitValue());
 		Assertions.assertEquals(BigDecimal.valueOf(100.00), entity.getUnitValue());

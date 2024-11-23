@@ -3,7 +3,6 @@ package com.superestoque.estoque.controllers;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,7 +55,7 @@ public class ProductController {
 			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Forbidden\"}"))) })
 	@PreAuthorize("hasAnyRole('ADMIN','OPERATOR')")
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<ProductDTO> findById(@PathVariable UUID id) {
+	public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
 		ProductDTO product = service.findById(id);
 		return ResponseEntity.ok(product);
 	}
@@ -68,7 +67,7 @@ public class ProductController {
 			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Forbidden\"}"))) })
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteById(@PathVariable Long id) {
 		service.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
@@ -96,7 +95,7 @@ public class ProductController {
 			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Forbidden\"}"))) })
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = "/{id}", consumes = "multipart/form-data")
-	public ResponseEntity<ProductDTO> updateProduct(@PathVariable UUID id, @RequestParam String name,
+	public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestParam String name,
 			@RequestParam int quantity, @RequestParam("critical_quantity") int criticalQuantity,
 			@RequestParam("unit_value") BigDecimal unitValue, @RequestParam MultipartFile photo) throws IOException {
 		ProductDTO product = new ProductDTO(name, quantity, photo.getBytes(), criticalQuantity, unitValue);

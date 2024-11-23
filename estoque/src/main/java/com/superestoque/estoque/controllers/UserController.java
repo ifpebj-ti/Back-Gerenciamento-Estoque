@@ -1,7 +1,6 @@
 package com.superestoque.estoque.controllers;
 
 import java.net.URI;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -69,7 +68,7 @@ public class UserController {
 			@ApiResponse(description = "Not Found", responseCode = "404", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"timestamp\": \"2024-02-04T12:00:00Z\",\n\"status\": 404,\n\"error\": \"Recurso não encontrado\",\n\"message\": \"Usuário não encontrado\",\n\"path\": \"/users/{id}\"}"), schema = @Schema(implementation = StandardError.class))) })
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = "/desactive/{id}")
-	public ResponseEntity<Void> desactivateUser(@PathVariable UUID id) {
+	public ResponseEntity<Void> desactivateUser(@PathVariable Long id) {
 		service.desactivateUser(id);
 		return ResponseEntity.noContent().build();
 	}
@@ -81,7 +80,7 @@ public class UserController {
 			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Invalid request payload\"}"))) })
 	@PreAuthorize("hasAnyRole('ADMIN','OPERATOR')")
 	@PutMapping(value = "/updatePassword/{id}")
-	public ResponseEntity<Void> updatePassword(@PathVariable UUID id,
+	public ResponseEntity<Void> updatePassword(@PathVariable Long id,
 			@Valid @RequestBody UserUpdatePasswordDTO entity) {
 		service.updatePassword(id, entity);
 		return ResponseEntity.noContent().build();
@@ -94,7 +93,7 @@ public class UserController {
 			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Invalid request payload\"}"))) })
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = "/updateRole/{id}")
-	public ResponseEntity<Void> updateRole(@PathVariable UUID id, @RequestBody RoleDTO role) {
+	public ResponseEntity<Void> updateRole(@PathVariable Long id, @RequestBody RoleDTO role) {
 		service.updateRole(id, role.getId());
 		return ResponseEntity.noContent().build();
 	}

@@ -4,8 +4,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.UUID;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,16 +33,16 @@ public class CompanyControllerIT {
 	private String adminUsername;
 	private String operatorUsername;
 	private String password;
-	private UUID existingId;
-	private UUID nonExistingId;
+	private Long existingId;
+	private Long nonExistingId;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		adminUsername = "alex.brown@ifpe.com";
 		operatorUsername = "maria.green@ifpe.com";
 		password = "123456";
-		existingId = UUID.fromString("e3b9deaf-5e5f-424d-9063-cb32e1e7a6f3");
-		nonExistingId = UUID.randomUUID();
+		existingId = 1L;
+		nonExistingId = 1000L;
 	}
 
 	@Test

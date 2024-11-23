@@ -3,7 +3,6 @@ package com.superestoque.estoque.entities.dto;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import com.superestoque.estoque.entities.Role;
 import com.superestoque.estoque.entities.User;
@@ -17,12 +16,13 @@ public class UserDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private UUID id;
+	private Long id;
 	@Size(min = 4, max = 60, message = "O campo nome deve conter entre 4 e 60 caracteres")
 	@NotBlank(message = "O campo nome é obrigatório")
 	private String name;
 	@Column(unique = true)
 	@Email(message = "E-mail inválido")
+	@NotBlank(message = "O campo nome é obrigatório")
 	private String email;
 	private boolean status;
 	Set<RoleDTO> roles = new HashSet<>();;
@@ -30,7 +30,7 @@ public class UserDTO implements Serializable {
 	public UserDTO() {
 	}
 
-	public UserDTO(UUID id, String name, String email, boolean status) {
+	public UserDTO(Long id, String name, String email, boolean status) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
@@ -52,11 +52,11 @@ public class UserDTO implements Serializable {
 		entity.getRoles().forEach(role -> this.roles.add(new RoleDTO(role)));
 	}
 
-	public UUID getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

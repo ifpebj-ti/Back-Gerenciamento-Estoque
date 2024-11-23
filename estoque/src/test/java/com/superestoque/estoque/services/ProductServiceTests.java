@@ -2,7 +2,6 @@ package com.superestoque.estoque.services;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,8 +43,8 @@ public class ProductServiceTests {
 	@Mock
 	private CompanyService companyService;
 
-	private UUID existingId;
-	private UUID nonExistingId;
+	private Long existingId;
+	private Long nonExistingId;
 	private Product product;
 	private ProductDTO productDTO;
 	private Company company;
@@ -54,8 +53,8 @@ public class ProductServiceTests {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		existingId = UUID.randomUUID();
-		nonExistingId = UUID.randomUUID();
+		existingId = 1L;
+		nonExistingId = 1000L;
 		company = CompanyFactory.createCompany();
 		companyDTO = CompanyFactory.createCompanyDTO();
 		product = ProductFactory.createProduct(company);
