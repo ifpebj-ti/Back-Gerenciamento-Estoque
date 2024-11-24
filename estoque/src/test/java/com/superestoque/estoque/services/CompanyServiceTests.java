@@ -2,7 +2,6 @@ package com.superestoque.estoque.services;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,8 +34,8 @@ public class CompanyServiceTests {
 	@Mock
 	private CompanyRepository repository;
 
-	private UUID existingCompanyId;
-	private UUID nonExistingCompanyId;
+	private Long existingCompanyId;
+	private Long nonExistingCompanyId;
 	private Company company;
 	private User user;
 	private MockMultipartFile validPhoto;
@@ -44,8 +43,8 @@ public class CompanyServiceTests {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		existingCompanyId = UUID.fromString("e3b9deaf-5e5f-424d-9063-cb32e1e7a6f3");
-		nonExistingCompanyId = UUID.randomUUID();
+		existingCompanyId = 1L;
+		nonExistingCompanyId = 1000L;
 		company = CompanyFactory.createCompany();
 		user = UserFactory.createUser();
 		validPhoto = new MockMultipartFile("photo", "test.jpg", "image/jpeg", "photo content".getBytes());

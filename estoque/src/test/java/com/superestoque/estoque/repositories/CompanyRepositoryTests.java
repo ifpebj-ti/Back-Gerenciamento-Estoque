@@ -1,7 +1,6 @@
 package com.superestoque.estoque.repositories;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,15 +18,15 @@ public class CompanyRepositoryTests {
 	@Autowired
 	private CompanyRepository repository;
 
-	private UUID nonExistingId;
-	private UUID existingId;
+	private Long nonExistingId;
+	private Long existingId;
 	private Company company;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		existingId = UUID.fromString("e3b9deaf-5e5f-424d-9063-cb32e1e7a6f3");
+		existingId = 1L;
 
-		nonExistingId = UUID.randomUUID();
+		nonExistingId = 1000L;
 		company = CompanyFactory.createCompany();
 	}
 

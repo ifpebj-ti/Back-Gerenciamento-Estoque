@@ -4,15 +4,14 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
-
-import org.hibernate.annotations.UuidGenerator;
 
 import com.superestoque.estoque.entities.dto.CompanyDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
@@ -25,8 +24,8 @@ public class Company implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@UuidGenerator
-	private UUID id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	private String name;
 	private String cnpj;
 	@Lob
@@ -39,7 +38,7 @@ public class Company implements Serializable {
 	public Company() {
 	}
 
-	public Company(UUID id, String name, String cnpj, byte[] photo) {
+	public Company(Long id, String name, String cnpj, byte[] photo) {
 		this.id = id;
 		this.name = name;
 		this.cnpj = cnpj;
@@ -53,11 +52,11 @@ public class Company implements Serializable {
 		this.photo = entity.getPhoto();
 	}
 
-	public UUID getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

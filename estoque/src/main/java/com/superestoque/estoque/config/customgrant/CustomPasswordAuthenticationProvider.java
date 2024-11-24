@@ -145,7 +145,7 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 
 		OAuth2Authorization authorization = authorizationBuilder.build();
 		this.authorizationService.save(authorization);
-		LOG.info("Usuário "+ username +" logado com sucesso");
+		LOG.info("Usuário "+ username +" logado com sucesso" + user.getAuthorities());
 		return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal, accessToken);
 	}
 

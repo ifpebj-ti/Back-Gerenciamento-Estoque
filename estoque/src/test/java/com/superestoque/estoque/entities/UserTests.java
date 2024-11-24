@@ -24,7 +24,7 @@ public class UserTests {
 		Assertions.assertNotNull(entity.getEmail());
 		Assertions.assertNotNull(entity.getPassword());
 		Assertions.assertEquals("email@gmail.com", entity.getEmail());
-		Assertions.assertNotNull(entity.isStatus());
+		Assertions.assertEquals(true, entity.isStatus());
 		Assertions.assertEquals(1, entity.getRoles().size());
 	}
 }

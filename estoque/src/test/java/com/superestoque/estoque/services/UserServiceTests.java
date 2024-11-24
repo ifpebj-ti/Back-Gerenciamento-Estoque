@@ -1,7 +1,6 @@
 package com.superestoque.estoque.services;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,8 +39,8 @@ public class UserServiceTests {
 	@Mock
 	private RoleRepository roleRepository;
 
-	private UUID existingId;
-	private UUID nonExistingId;
+	private Long existingId;
+	private Long nonExistingId;
 	private String existingEmail;
 	private String nonExistingEmail;
 	private User entity;
@@ -50,8 +49,8 @@ public class UserServiceTests {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		existingId = UUID.fromString("e3b9deaf-5e5f-424d-9063-cb32e1e7a6f4");
-		nonExistingId = UUID.randomUUID();
+		existingId = 1L;
+		nonExistingId = 1000L;
 		existingEmail = "alex.brown123@ifpe.com";
 		nonExistingEmail = "joazinho.daagua@ifpe.com";
 		entity = UserFactory.createUser();

@@ -2,7 +2,6 @@ package com.superestoque.estoque.services;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +45,7 @@ public class ProductService {
 	}
 
 	@Transactional
-	public ProductDTO findById(UUID id) {
+	public ProductDTO findById(Long id) {
 		Optional<Product> obj = repository.findById(id);
 		Product product = obj.orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado."));
 		LOG.info("Produto " + product.getName() + " retornado com sucesso!");
@@ -54,7 +53,7 @@ public class ProductService {
 	}
 
 	@Transactional
-	public void deleteById(UUID id) {
+	public void deleteById(Long id) {
 		User user = authService.authenticated();
 		if (!repository.existsById(id)) {
 			throw new ResourceNotFoundException("Produto não encontrado");
@@ -73,7 +72,7 @@ public class ProductService {
 	}
 
 	@Transactional
-	public ProductDTO updateProduct(UUID id, ProductDTO entity) {
+	public ProductDTO updateProduct(Long id, ProductDTO entity) {
 		Optional<Product> obj = repository.findById(id);
 		Product product = obj.orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado."));
 		updateData(product, entity);

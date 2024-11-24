@@ -2,7 +2,6 @@ package com.superestoque.estoque.controllers;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +51,7 @@ public class CompanyController {
 			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Forbidden\"}"))) })
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = "/{id}", consumes = "multipart/form-data")
-	public ResponseEntity<CompanyDTO> updateCompany(@PathVariable UUID id, @RequestParam("name") String name,
+	public ResponseEntity<CompanyDTO> updateCompany(@PathVariable Long id, @RequestParam("name") String name,
 			@RequestParam("photo") MultipartFile photo) throws IOException {
 		CompanyDTO entity = service.updateDataByUser(id, name, photo);
 		return ResponseEntity.ok(entity);

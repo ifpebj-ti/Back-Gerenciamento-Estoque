@@ -6,8 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.UUID;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +40,8 @@ public class UserControllerIT {
 	private String adminUsername;
 	private String operatorUsername;
 	private String password;
-	private UUID existingId;
-	private UUID nonExistingId;
+	private Long existingId;
+	private Long nonExistingId;
 	private UserInsertDTO userInsert;
 
 	@BeforeEach
@@ -51,12 +49,9 @@ public class UserControllerIT {
 		adminUsername = "alex.brown@ifpe.com";
 		operatorUsername = "maria.green@ifpe.com";
 		password = "123456";
-		existingId = UUID.fromString("e3b9deaf-5e5f-424d-9063-cb32e1e7a6f4");
-		nonExistingId = UUID.randomUUID();
-		userInsert = new UserInsertDTO(UUID.randomUUID(), "Usuário teste", "teste@ifpe.com", true, "123456789");
-		userInsert.setName("MouraTech");
-		userInsert.setEmail("moura.tech@grupomoura.com");
-		userInsert.setStatus(true);
+		existingId = 1L;
+		nonExistingId = 1000L;
+		userInsert = new UserInsertDTO(5L, "Usuário teste", "teste@ifpe.com", true, "123456789");
 		userInsert.getRoles().add(new RoleDTO(2L, "ROLE_OPERATOR"));
 	}
 
@@ -93,8 +88,9 @@ public class UserControllerIT {
 	@Test
 	public void saveNewUserShouldReturnUnprocessableEntityWhenInvalidData() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
+		
+		userInsert = new UserInsertDTO(78L, "Usuário teste", "", true, "123456789");
 
-		UserInsertDTO userInsert = new UserInsertDTO(UUID.randomUUID(), "", "test@ifpe.com", true, "");
 		String jsonBody = objectMapper.writeValueAsString(userInsert);
 
 		ResultActions result = mockMvc.perform(post("/users").header("Authorization", "Bearer " + accessToken)

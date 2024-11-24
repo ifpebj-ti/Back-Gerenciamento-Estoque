@@ -9,7 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.superestoque.estoque.entities.User;
 import com.superestoque.estoque.repositories.UserRepository;
@@ -24,8 +23,6 @@ public class AuthService {
 	@Autowired
 	private UserRepository userRepository;
 
-
-	@Transactional
 	public User authenticated() {
 		try {
 			JwtAuthenticationToken jwtToken = (JwtAuthenticationToken) SecurityContextHolder.getContext()

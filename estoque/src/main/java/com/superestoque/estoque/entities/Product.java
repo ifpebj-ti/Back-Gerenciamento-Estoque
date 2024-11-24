@@ -3,11 +3,10 @@ package com.superestoque.estoque.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.UUID;
-
-import org.hibernate.annotations.UuidGenerator;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
@@ -21,8 +20,8 @@ public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@UuidGenerator
-	private UUID id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	private String name;
 	private int quantity;
 	@Lob
@@ -37,7 +36,7 @@ public class Product implements Serializable {
 	public Product() {
 	}
 
-	public Product(UUID id, String name, int quantity, byte[] photo, int critical_quantity, BigDecimal unitValue) {
+	public Product(Long id, String name, int quantity, byte[] photo, int critical_quantity, BigDecimal unitValue) {
 		this.id = id;
 		this.name = name;
 		this.quantity = quantity;
@@ -46,11 +45,11 @@ public class Product implements Serializable {
 		this.unitValue = unitValue;
 	}
 
-	public UUID getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

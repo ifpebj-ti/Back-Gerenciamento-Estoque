@@ -1,7 +1,6 @@
 package com.superestoque.estoque.services;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +56,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	@Transactional
-	public void desactivateUser(UUID id) {
+	public void desactivateUser(Long id) {
 		Optional<User> obj = repository.findById(id);
 		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 		user.setStatus(false);
@@ -75,7 +74,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	@Transactional
-	public void updatePassword(UUID id, UserUpdatePasswordDTO entity) {
+	public void updatePassword(Long id, UserUpdatePasswordDTO entity) {
 		Optional<User> obj = repository.findById(id);
 		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 		updateData(user, entity);
@@ -84,7 +83,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	@Transactional
-	public void updateRole(UUID id, Long roleId) {
+	public void updateRole(Long id, Long roleId) {
 		Optional<User> obj = repository.findById(id);
 		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 		updateUserRole(user, roleId);

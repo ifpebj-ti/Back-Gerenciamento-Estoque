@@ -1,7 +1,6 @@
 package com.superestoque.estoque.entities.dto;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 import com.superestoque.estoque.entities.Company;
 
@@ -13,7 +12,7 @@ public class CompanyDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private UUID id;
+	private Long id;
 	@Size(min = 4, max = 60, message = "O campo nome deve conter entre 4 e 60 caracteres")
 	@NotBlank(message = "O campo nome é obrigatório")
 	private String name;
@@ -24,7 +23,7 @@ public class CompanyDTO implements Serializable {
 	public CompanyDTO() {
 	}
 
-	public CompanyDTO(UUID id, String name, String cnpj, byte[] photo) {
+	public CompanyDTO(Long id, String name, String cnpj, byte[] photo) {
 		this.id = id;
 		this.name = name;
 		this.cnpj = cnpj;
@@ -38,11 +37,11 @@ public class CompanyDTO implements Serializable {
 		this.photo = entity.getPhoto();
 	}
 
-	public UUID getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
