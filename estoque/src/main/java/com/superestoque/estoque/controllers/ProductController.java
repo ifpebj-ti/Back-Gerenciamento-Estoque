@@ -43,8 +43,8 @@ public class ProductController {
 			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Forbidden\"}"))) })
 	@PreAuthorize("hasAnyRole('ADMIN','OPERATOR')")
 	@GetMapping
-	public ResponseEntity<Page<ProductDTO>> findAllProductsPagedByGroup(Pageable pageable) {
-		Page<ProductDTO> products = service.findAllProductByCompanyIdPaged(pageable);
+	public ResponseEntity<Page<ProductDTO>> findAllProductsPagedByGroup(@RequestParam(value = "categoryId", required = false) Long categoryId, Pageable pageable) {
+		Page<ProductDTO> products = service.findAllProductByCompanyIdPaged(pageable, categoryId);
 		return ResponseEntity.ok(products);
 	}
 

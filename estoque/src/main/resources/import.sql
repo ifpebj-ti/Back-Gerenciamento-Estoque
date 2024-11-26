@@ -12,4 +12,18 @@ INSERT INTO tb_user_role (user_id, role_id) VALUES (1, 1);
 INSERT INTO tb_user_role (user_id, role_id) VALUES (2, 2);
 INSERT INTO tb_user_role (user_id, role_id) VALUES (3, 2);
 
-INSERT INTO tb_product (name, quantity, critical_quantity, company_id, unit_value, stock_value) VALUES ('Produto 1', 1, 10 , 1, 1, 1);
+INSERT INTO tb_product (name, quantity, critical_quantity, company_id, unit_value, stock_value) VALUES ('Código Limpo', 1, 10 , 1, 10, 100);
+INSERT INTO tb_product (name, quantity, critical_quantity, company_id, unit_value, stock_value) VALUES ('The Lord of the Rings', 100, 10 , 1, 45.90, 459);
+
+INSERT INTO tb_product (name, quantity, critical_quantity, company_id, unit_value, stock_value) VALUES ('Macbook Pro', 32, 7 , 2, 1250.0, 40.000);
+INSERT INTO tb_product (name, quantity, critical_quantity, company_id, unit_value, stock_value) VALUES ('PC Gamer', 3, 1 , 2, 4.500, 13.500);
+
+INSERT INTO tb_category (name, company_id) VALUES ('Livros', 1);
+INSERT INTO tb_category (name, company_id) VALUES ('Eletrônicos', 1);
+INSERT INTO tb_category (name, company_id) VALUES ('Eletrônicos', 2);
+
+INSERT INTO tb_product_category (product_id, category_id) VALUES (1, 1);
+INSERT INTO tb_product_category (product_id, category_id) VALUES (2, 2);
+
+INSERT INTO tb_product_category (product_id, category_id) VALUES (3, 3);
+INSERT INTO tb_product_category (product_id, category_id) VALUES (4, 3);
