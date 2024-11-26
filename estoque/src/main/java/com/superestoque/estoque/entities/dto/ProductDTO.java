@@ -25,10 +25,10 @@ public class ProductDTO implements Serializable {
 	private byte[] photo;
 	@Min(value = 0)
 	private int critical_quantity;
-	@Column(precision = 15, scale = 2)
+	@Column(scale = 2)
 	@Min(0)
 	private BigDecimal unitValue;
-	@Column(precision = 15, scale = 2)
+	@Column(scale = 2)
 	@Min(0)
 	private BigDecimal stockValue;
 

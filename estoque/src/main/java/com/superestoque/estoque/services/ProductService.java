@@ -36,12 +36,16 @@ public class ProductService {
 	private AuthService authService;
 
 	@Transactional
-	public Page<ProductDTO> findAllProductByCompanyIdPaged(Pageable pageable) {
+	public Page<ProductDTO> findAllProductByCompanyIdPaged(Pageable pageable, Long categoryId) {
 		User user = authService.authenticated();
-		Page<Product> products = repository.findByCompanyId(user.getCompany().getId(), pageable);
-		LOG.info("Retornando pagina " + pageable.getPageNumber() + " de produtos filtrado pela empresa "
-				+ user.getCompany().getId());
-		return products.map(product -> new ProductDTO(product));
+		Long companyId = user.getCompany().getId();
+
+		Page<Product> products = repository.findByCompanyIdAndCategoryId(companyId, categoryId, pageable);
+
+		LOG.info("Retornando página " + pageable.getPageNumber() + " de produtos filtrados pela empresa " + companyId
+				+ (categoryId != null ? " e pela categoria " + categoryId : ""));
+
+		return products.map(ProductDTO::new);
 	}
 
 	@Transactional
