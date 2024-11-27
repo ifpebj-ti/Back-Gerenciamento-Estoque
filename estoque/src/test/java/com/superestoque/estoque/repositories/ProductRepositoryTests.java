@@ -2,7 +2,6 @@ package com.superestoque.estoque.repositories;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,16 +22,16 @@ public class ProductRepositoryTests {
 	@Autowired
 	private CompanyRepository companyRepository;
 
-	private UUID existingId;
-	private UUID nonExistingId;
+	private Long existingId;
+	private Long nonExistingId;
 	private Product product;
 	private Company company;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		existingId = UUID.fromString("e3b9deaf-5e5f-424d-9063-cb32e1e7a6f4");
-		nonExistingId = UUID.randomUUID();
-		company = new Company(UUID.randomUUID(), "Empresa Teste", "12345678000100", null);
+		existingId = 1L;
+		nonExistingId = 1000L;
+		company = new Company(30L, "Empresa Teste", "12345678000100", null);
 		company = companyRepository.save(company);
 		product = ProductFactory.createProduct(company);
 	}
@@ -110,7 +109,7 @@ public class ProductRepositoryTests {
 	@Test
 	public void calculateStockValueShouldReturnTotalStockValue() {
 		product.calculateStockValue();
-		
+
 		Assertions.assertEquals(BigDecimal.valueOf(100), product.getStockValue());
 	}
 

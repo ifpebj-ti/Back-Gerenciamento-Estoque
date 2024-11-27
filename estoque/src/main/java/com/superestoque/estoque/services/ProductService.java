@@ -2,7 +2,6 @@ package com.superestoque.estoque.services;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,16 +36,20 @@ public class ProductService {
 	private AuthService authService;
 
 	@Transactional
-	public Page<ProductDTO> findAllProductByCompanyIdPaged(Pageable pageable) {
+	public Page<ProductDTO> findAllProductByCompanyIdPaged(Pageable pageable, Long categoryId) {
 		User user = authService.authenticated();
-		Page<Product> products = repository.findByCompanyId(user.getCompany().getId(), pageable);
-		LOG.info("Retornando pagina " + pageable.getPageNumber() + " de produtos filtrado pela empresa "
-				+ user.getCompany().getId());
-		return products.map(product -> new ProductDTO(product));
+		Long companyId = user.getCompany().getId();
+
+		Page<Product> products = repository.findByCompanyIdAndCategoryId(companyId, categoryId, pageable);
+
+		LOG.info("Retornando página " + pageable.getPageNumber() + " de produtos filtrados pela empresa " + companyId
+				+ (categoryId != null ? " e pela categoria " + categoryId : ""));
+
+		return products.map(ProductDTO::new);
 	}
 
 	@Transactional
-	public ProductDTO findById(UUID id) {
+	public ProductDTO findById(Long id) {
 		Optional<Product> obj = repository.findById(id);
 		Product product = obj.orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado."));
 		LOG.info("Produto " + product.getName() + " retornado com sucesso!");
@@ -54,7 +57,7 @@ public class ProductService {
 	}
 
 	@Transactional
-	public void deleteById(UUID id) {
+	public void deleteById(Long id) {
 		User user = authService.authenticated();
 		if (!repository.existsById(id)) {
 			throw new ResourceNotFoundException("Produto não encontrado");
@@ -73,7 +76,7 @@ public class ProductService {
 	}
 
 	@Transactional
-	public ProductDTO updateProduct(UUID id, ProductDTO entity) {
+	public ProductDTO updateProduct(Long id, ProductDTO entity) {
 		Optional<Product> obj = repository.findById(id);
 		Product product = obj.orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado."));
 		updateData(product, entity);

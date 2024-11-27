@@ -2,15 +2,18 @@ package com.superestoque.estoque.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Objects;
-import java.util.UUID;
-
-import org.hibernate.annotations.UuidGenerator;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -21,8 +24,8 @@ public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@UuidGenerator
-	private UUID id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	private String name;
 	private int quantity;
 	@Lob
@@ -33,11 +36,14 @@ public class Product implements Serializable {
 	private Company company;
 	private BigDecimal unitValue;
 	private BigDecimal stockValue;
+	@ManyToMany
+	@JoinTable(name = "tb_product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+	Set<Category> categories = new HashSet<>();
 
 	public Product() {
 	}
 
-	public Product(UUID id, String name, int quantity, byte[] photo, int critical_quantity, BigDecimal unitValue) {
+	public Product(Long id, String name, int quantity, byte[] photo, int critical_quantity, BigDecimal unitValue) {
 		this.id = id;
 		this.name = name;
 		this.quantity = quantity;
@@ -46,11 +52,11 @@ public class Product implements Serializable {
 		this.unitValue = unitValue;
 	}
 
-	public UUID getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

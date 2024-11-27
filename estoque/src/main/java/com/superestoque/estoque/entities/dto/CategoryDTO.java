@@ -2,39 +2,32 @@ package com.superestoque.estoque.entities.dto;
 
 import java.io.Serializable;
 
-import com.superestoque.estoque.entities.Company;
+import com.superestoque.estoque.entities.Category;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class CompanyDTO implements Serializable {
-
+public class CategoryDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	@Column(unique = true)
 	@Size(min = 4, max = 60, message = "O campo nome deve conter entre 4 e 60 caracteres")
 	@NotBlank(message = "O campo nome é obrigatório")
 	private String name;
-	@Column(unique = true)
-	private String cnpj;
-	private byte[] photo;
 
-	public CompanyDTO() {
+	public CategoryDTO() {
 	}
 
-	public CompanyDTO(Long id, String name, String cnpj, byte[] photo) {
+	public CategoryDTO(Long id, String name) {
 		this.id = id;
 		this.name = name;
-		this.cnpj = cnpj;
-		this.photo = photo;
 	}
 
-	public CompanyDTO(Company entity) {
+	public CategoryDTO(Category entity) {
 		this.id = entity.getId();
 		this.name = entity.getName();
-		this.cnpj = entity.getCnpj();
-		this.photo = entity.getPhoto();
 	}
 
 	public Long getId() {
@@ -52,21 +45,4 @@ public class CompanyDTO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public String getCnpj() {
-		return cnpj;
-	}
-
-	public void setCnpj(String cnpj) {
-		this.cnpj = cnpj;
-	}
-
-	public byte[] getPhoto() {
-		return photo;
-	}
-
-	public void setPhoto(byte[] photo) {
-		this.photo = photo;
-	}
-
 }

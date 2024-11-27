@@ -1,15 +1,29 @@
 INSERT INTO tb_role (authority) VALUES ('ROLE_ADMIN');
 INSERT INTO tb_role (authority) VALUES ('ROLE_OPERATOR');
 
-INSERT INTO tb_company (id, name, cnpj) VALUES ('e3b9deaf-5e5f-424d-9063-cb32e1e7a6f3', 'Companhia das índias orientais','1234567891011');
-INSERT INTO tb_company (id, name, cnpj) VALUES ('e044a18b-14fb-475f-88fb-8094120bcc48', 'Companhia das índias ocidentias','1110987654321');
+INSERT INTO tb_company (name, cnpj) VALUES ('Companhia das índias orientais','1234567891011');
+INSERT INTO tb_company (name, cnpj) VALUES ('Companhia das índias ocidentias','1110987654321');
 
-INSERT INTO tb_user (id, name, status, email, password, company_id) VALUES ('e3b9deaf-5e5f-424d-9063-cb32e1e7a6f4', 'Alex Brown', true, 'alex.brown@ifpe.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG', 'e3b9deaf-5e5f-424d-9063-cb32e1e7a6f3');
-INSERT INTO tb_user (id, name, status, email, password, company_id) VALUES ('e044a18b-14fb-475f-88fb-8094120bcc47', 'Maria Green', true, 'maria.green@ifpe.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG', 'e3b9deaf-5e5f-424d-9063-cb32e1e7a6f3');
-INSERT INTO tb_user (id, name, status, email, password, company_id) VALUES ('6f1c8e4a-c9ad-4c3d-87e0-acd6d7de64a0', 'Jhon Peter', true, 'jhon.peter@ifpe.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG', 'e044a18b-14fb-475f-88fb-8094120bcc48');
+INSERT INTO tb_user (name, status, email, password, company_id) VALUES ('Alex Brown', true, 'alex.brown@ifpe.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG', 1);
+INSERT INTO tb_user (name, status, email, password, company_id) VALUES ('Maria Green', true, 'maria.green@ifpe.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG', 1);
+INSERT INTO tb_user (name, status, email, password, company_id) VALUES ('Jhon Peter', true, 'jhon.peter@ifpe.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG', 2);
 
-INSERT INTO tb_user_role (user_id, role_id) VALUES ('e3b9deaf-5e5f-424d-9063-cb32e1e7a6f4', 1);
-INSERT INTO tb_user_role (user_id, role_id) VALUES ('e044a18b-14fb-475f-88fb-8094120bcc47', 2);
-INSERT INTO tb_user_role (user_id, role_id) VALUES ('6f1c8e4a-c9ad-4c3d-87e0-acd6d7de64a0', 2);
+INSERT INTO tb_user_role (user_id, role_id) VALUES (1, 1);
+INSERT INTO tb_user_role (user_id, role_id) VALUES (2, 2);
+INSERT INTO tb_user_role (user_id, role_id) VALUES (3, 2);
 
-INSERT INTO tb_product (id, name, quantity, critical_quantity, company_id, unit_value, stock_value) VALUES ('e3b9deaf-5e5f-424d-9063-cb32e1e7a6f4', 'Produto 1', 1, 10 , 'e3b9deaf-5e5f-424d-9063-cb32e1e7a6f3', 1, 1);
+INSERT INTO tb_product (name, quantity, critical_quantity, company_id, unit_value, stock_value) VALUES ('Código Limpo', 1, 10 , 1, 10, 100);
+INSERT INTO tb_product (name, quantity, critical_quantity, company_id, unit_value, stock_value) VALUES ('The Lord of the Rings', 100, 10 , 1, 45.90, 459);
+
+INSERT INTO tb_product (name, quantity, critical_quantity, company_id, unit_value, stock_value) VALUES ('Macbook Pro', 32, 7 , 2, 1250.0, 40.000);
+INSERT INTO tb_product (name, quantity, critical_quantity, company_id, unit_value, stock_value) VALUES ('PC Gamer', 3, 1 , 2, 4.500, 13.500);
+
+INSERT INTO tb_category (name, company_id) VALUES ('Livros', 1);
+INSERT INTO tb_category (name, company_id) VALUES ('Eletrônicos', 1);
+INSERT INTO tb_category (name, company_id) VALUES ('Eletrônicos', 2);
+
+INSERT INTO tb_product_category (product_id, category_id) VALUES (1, 1);
+INSERT INTO tb_product_category (product_id, category_id) VALUES (2, 2);
+
+INSERT INTO tb_product_category (product_id, category_id) VALUES (3, 3);
+INSERT INTO tb_product_category (product_id, category_id) VALUES (4, 3);

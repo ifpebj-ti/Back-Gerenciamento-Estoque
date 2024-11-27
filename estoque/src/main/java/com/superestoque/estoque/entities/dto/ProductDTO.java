@@ -2,7 +2,6 @@ package com.superestoque.estoque.entities.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import com.superestoque.estoque.entities.Product;
 
@@ -16,7 +15,7 @@ public class ProductDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private UUID id;
+	private Long id;
 	@Size(min = 4, max = 60, message = "O campo nome deve conter entre 4 e 60 caracteres")
 	@NotBlank(message = "O campo nome é obrigatório")
 	private String name;
@@ -26,17 +25,17 @@ public class ProductDTO implements Serializable {
 	private byte[] photo;
 	@Min(value = 0)
 	private int critical_quantity;
-	@Column(precision = 15, scale = 2)
+	@Column(scale = 2)
 	@Min(0)
 	private BigDecimal unitValue;
-	@Column(precision = 15, scale = 2)
+	@Column(scale = 2)
 	@Min(0)
 	private BigDecimal stockValue;
 
 	public ProductDTO() {
 	}
 
-	public ProductDTO(UUID id, String name, int quantity, byte[] photo, int critical_quantity, BigDecimal unitValue,
+	public ProductDTO(Long id, String name, int quantity, byte[] photo, int critical_quantity, BigDecimal unitValue,
 			BigDecimal stockValue) {
 		this.id = id;
 		this.name = name;
@@ -65,11 +64,11 @@ public class ProductDTO implements Serializable {
 		this.stockValue = entity.getStockValue();
 	}
 
-	public UUID getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -46,7 +45,7 @@ public class CompanyService {
 	}
 
 	@Transactional
-	public CompanyDTO updateDataByUser(UUID id, String name, MultipartFile photo) throws IOException {
+	public CompanyDTO updateDataByUser(Long id, String name, MultipartFile photo) throws IOException {
 		LOG.info("Tentando atualizar nome e foto da empresa: " + id);
 		if (!ALLOWED_FILE_TYPES.contains(photo.getContentType())) {
 			throw new IllegalArgumentException("Tipo de arquivo inválido Somente JPEG e PNG são permitidos.");

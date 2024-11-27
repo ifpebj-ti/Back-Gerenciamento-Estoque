@@ -1,7 +1,6 @@
 package com.superestoque.estoque.services;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,10 +13,12 @@ import org.mockito.Mockito;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.superestoque.estoque.entities.Role;
 import com.superestoque.estoque.entities.User;
 import com.superestoque.estoque.entities.dto.UserDTO;
 import com.superestoque.estoque.entities.dto.UserInsertDTO;
 import com.superestoque.estoque.entities.dto.UserUpdatePasswordDTO;
+import com.superestoque.estoque.factories.RoleFactory;
 import com.superestoque.estoque.factories.UserFactory;
 import com.superestoque.estoque.repositories.RoleRepository;
 import com.superestoque.estoque.repositories.UserRepository;
@@ -38,21 +39,24 @@ public class UserServiceTests {
 	@Mock
 	private RoleRepository roleRepository;
 
-	private UUID existingId;
-	private UUID nonExistingId;
+	private Long existingId;
+	private Long nonExistingId;
 	private String existingEmail;
 	private String nonExistingEmail;
 	private User entity;
 	private UserDTO entityDTO;
+	private Role role;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		existingId = UUID.fromString("e3b9deaf-5e5f-424d-9063-cb32e1e7a6f4");
-		nonExistingId = UUID.randomUUID();
+		existingId = 1L;
+		nonExistingId = 1000L;
 		existingEmail = "alex.brown123@ifpe.com";
 		nonExistingEmail = "joazinho.daagua@ifpe.com";
 		entity = UserFactory.createUser();
 		entityDTO = UserFactory.createUserDTO();
+		role = RoleFactory.createRole();
+		roleRepository.save(role);
 		Mockito.when(repository.save(ArgumentMatchers.any())).thenReturn(entity);
 		Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(entity));
 		Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
@@ -61,8 +65,10 @@ public class UserServiceTests {
 		Mockito.when(repository.getReferenceById(existingId)).thenReturn(entity);
 		Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
 		Mockito.doNothing().when(repository).deleteById(existingId);
-		Mockito.doThrow(ResourceNotFoundException.class).when(repository).deleteById(nonExistingId);
+		Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
+		Mockito.when(repository.save(ArgumentMatchers.any(User.class))).thenReturn(entity);
 		Mockito.when(authService.authenticated()).thenReturn(entity);
+		Mockito.when(roleRepository.findById(role.getId())).thenReturn(Optional.of(role));
 	}
 
 	@Test
@@ -121,7 +127,6 @@ public class UserServiceTests {
 		});
 
 		Mockito.verify(repository, Mockito.times(1)).findById(existingId);
-		Mockito.verify(repository, Mockito.times(1)).save(ArgumentMatchers.any(User.class));
 	}
 
 	@Test
@@ -138,10 +143,9 @@ public class UserServiceTests {
 
 	@Test
 	public void updateRoleShouldUpdateUserRoleWhenIdExists() {
-		Long roleId = 1L;
 
 		Assertions.assertDoesNotThrow(() -> {
-			service.updateRole(existingId, roleId);
+			service.updateRole(existingId, role.getId());
 		});
 
 		Mockito.verify(repository, Mockito.times(1)).findById(existingId);

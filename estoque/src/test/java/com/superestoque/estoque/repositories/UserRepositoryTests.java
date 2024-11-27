@@ -2,7 +2,6 @@ package com.superestoque.estoque.repositories;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,16 +22,16 @@ public class UserRepositoryTests {
 	@Autowired
 	private RoleRepository roleRepository;
 
-	private UUID existingId;
-	private UUID nonExistingId;
+	private Long existingId;
+	private Long nonExistingId;
 	private String nonExistingEmail;
 	private User user;
 	private Role role;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		existingId = UUID.fromString("e3b9deaf-5e5f-424d-9063-cb32e1e7a6f4");
-		nonExistingId = UUID.randomUUID();
+		existingId = 1L;
+		nonExistingId = 1000L;
 		nonExistingEmail = "thor@vingadores.com.br";
 		user = UserFactory.createUser();
 		role = new Role(1L, "ROLE_ADMIN");
@@ -140,7 +139,7 @@ public class UserRepositoryTests {
 	public void deleteShouldRemoveUserButNotRolesWhenIdExists() {
 		user.getRoles().add(role);
 		user = repository.save(user);
-		UUID savedUserId = user.getId();
+		Long savedUserId = user.getId();
 		repository.deleteById(savedUserId);
 		Optional<User> deletedUser = repository.findById(savedUserId);
 		
