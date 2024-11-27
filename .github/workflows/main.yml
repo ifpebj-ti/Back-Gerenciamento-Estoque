@@ -42,4 +42,4 @@ jobs:
     - name: docker remove container
       run: docker rm -f deploy_backend
     - name: Run docker container
-      run: docker run -d --restart unless-stopped -p 8080:8080 --name deploy_backend brazf/estoque
+      run: docker run -d --restart unless-stopped -p 80:8080 --name deploy_backend brazf/estoque
