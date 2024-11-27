@@ -45,6 +45,7 @@ public class ProductServiceTests {
 
 	private Long existingId;
 	private Long nonExistingId;
+	private Long existingIdCategory;
 	private Product product;
 	private ProductDTO productDTO;
 	private Company company;
@@ -55,6 +56,7 @@ public class ProductServiceTests {
 	void setUp() throws Exception {
 		existingId = 1L;
 		nonExistingId = 1000L;
+		existingIdCategory = 1L;
 		company = CompanyFactory.createCompany();
 		companyDTO = CompanyFactory.createCompanyDTO();
 		product = ProductFactory.createProduct(company);
@@ -67,7 +69,8 @@ public class ProductServiceTests {
 		Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(product));
 		Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
 		Mockito.when(repository.save(ArgumentMatchers.any())).thenReturn(product);
-		Mockito.when(repository.findByCompanyId(company.getId(), PageRequest.of(0, 10)))
+		Mockito.when(
+				repository.findByCompanyIdAndCategoryId(company.getId(), existingIdCategory, PageRequest.of(0, 10)))
 				.thenReturn(new PageImpl<>(List.of(product)));
 		Mockito.when(repository.existsById(existingId)).thenReturn(true);
 		Mockito.when(repository.existsById(nonExistingId)).thenReturn(false);
@@ -76,12 +79,13 @@ public class ProductServiceTests {
 
 	@Test
 	public void findAllProductByCompanyIdPagedShouldReturnPagedProducts() {
-		Page<ProductDTO> result = service.findAllProductByCompanyIdPaged(PageRequest.of(0, 10));
+		Page<ProductDTO> result = service.findAllProductByCompanyIdPaged(PageRequest.of(0, 10), existingIdCategory);
 
 		Assertions.assertNotNull(result);
 		Assertions.assertEquals(1, result.getTotalElements());
 		Assertions.assertEquals(product.getName(), result.getContent().get(0).getName());
-		Mockito.verify(repository, Mockito.times(1)).findByCompanyId(company.getId(), PageRequest.of(0, 10));
+		Mockito.verify(repository, Mockito.times(1)).findByCompanyIdAndCategoryId(company.getId(), existingIdCategory,
+				PageRequest.of(0, 10));
 	}
 
 	@Test
