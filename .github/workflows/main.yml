@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    name: Build AWS
+    name: Build
     runs-on: ubuntu-latest
     steps:
 
@@ -39,5 +39,7 @@ jobs:
 
     - name: Pull image from docker hub
       run: docker pull brazf/estoque:latest
+    - name: docker remove container
+      run: docker rm -f deploy_backend
     - name: Run docker container
       run: docker run -d -p 8080:8080 --name deploy_backend brazf/estoque
