@@ -30,4 +30,5 @@ jobs:
     - name: Build docker image
       run: docker image -t brazf/estoque .
     - name: Push image docker
-      run: docker push brazf/estoque 
+      run: docker push brazf/estoque
+      
