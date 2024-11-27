@@ -31,4 +31,13 @@ jobs:
       run: docker build -t brazf/estoque .
     - name: Push image docker
       run: docker push brazf/estoque
-      
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+
+    - name: Pull image from docker hub
+      run: docker pull brazf/estoque:latest
+    - name: Run docker container
+      run: docker run -d -p 8080:8080 --name deploy_backend brazf/estoque
