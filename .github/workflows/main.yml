@@ -1,4 +1,4 @@
-name: Deploy Application AWS
+name: Deploy Application
 on:
   push:
     branches: [ main ]
@@ -39,7 +39,9 @@ jobs:
 
     - name: Pull image from docker hub
       run: docker pull brazf/estoque:latest
+      
     - name: docker remove container
       run: docker rm -f deploy_backend
+
     - name: Run docker container
-      run: docker run -d --restart unless-stopped -p 80:8080 --name deploy_backend brazf/estoque
+      run: docker run -d --restart unless-stopped -p 80:8080 --name deploy_backend -e DB_URL=${{ secrets.DB_URL }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} brazf/estoque
