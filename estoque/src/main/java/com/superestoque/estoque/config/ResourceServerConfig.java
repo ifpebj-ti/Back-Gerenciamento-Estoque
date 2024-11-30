@@ -30,7 +30,7 @@ public class ResourceServerConfig {
 	@Value("${cors.origins}")
 	private String corsOrigins;
 
-	private static final String[] PUBLIC = { "/swagger-ui/**", "/api-docs/**", "/v3/api-docs/**" };
+	private static final String[] PUBLIC = { "/swagger-ui/**", "/api-docs/**", "/v3/api-docs/**", "/actuator/health" };
 
 	@Bean
 	@Profile("test")
