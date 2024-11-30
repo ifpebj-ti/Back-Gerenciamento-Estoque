@@ -20,6 +20,12 @@ jobs:
         distribution: 'zulu'
         java-version: '17'
 
+    - name: Set database credentials
+      run: |
+          echo "spring.datasource.url=${{ secrets.DB_URL}}" >> $GITHUB_ENV
+          echo "spring.datasource.username=${{secrets.DB_USERNAME}}" >> $GITHUB_ENV
+          echo "spring.datasource.password=${{secrets.DB_PASSWORD}}" >> $GITHUB_ENV
+
     - name: build
       run: |
           cd estoque
