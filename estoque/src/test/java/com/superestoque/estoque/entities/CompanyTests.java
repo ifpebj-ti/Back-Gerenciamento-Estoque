@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public class CompanyTests {
 
 	@Test
-	public void companShouldHaveCorrectStructure() {
+	public void companyShouldHaveCorrectStructure() {
 		Company entity = new Company();
 
 		entity.setCnpj("123456-9");
