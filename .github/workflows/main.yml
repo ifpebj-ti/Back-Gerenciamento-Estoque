@@ -57,3 +57,4 @@ jobs:
 
     - name: Run docker container
       run: docker run -d --restart unless-stopped -p 80:8080 --name deploy_backend brazf/estoque
+      
