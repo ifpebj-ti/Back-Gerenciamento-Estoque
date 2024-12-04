@@ -28,7 +28,19 @@ jobs:
     - name: Login Docker
       run: docker login -u brazf -p ${{secrets.DOCKERHUB_TOKEN}}
     - name: Build docker image
-      run: docker build -t brazf/estoque .
+      run: |
+          docker build \
+          --build-arg DB_SERVER=${{secrets.DB_SERVER}} \
+          --build-arg DB_NAME=${{secrets.DB_NAME}} \
+          --build-arg DB_USERNAME=${{secrets.DB_USERNAME}} \
+          --build-arg DB_PASSWORD=${{secrets.DB_PASSWORD}} \
+          --build-arg APP_PROFILE=${{secrets.APP_PROFILE}} \
+          --build-arg CLIENT_ID=${{secrets.CLIENTID}} \
+          --build-arg CLIENT_SECRET=${{secrets.CLIENTSECRET}} \
+          --build-arg JWT_DURATION=${{secrets.JWT_DURATION}} \
+          --build-arg CORS_ORIGINS=${{secrets.CORS_ORIGINS}} \
+          -t brazf/estoque .
+
     - name: Push image docker
       run: docker push brazf/estoque
 
