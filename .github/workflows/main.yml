@@ -57,4 +57,3 @@ jobs:
             -e JWT_DURATION=${{secrets.JWT_DURATION}} \
             -e CORS_ORIGINS=${{secrets.CORS_ORIGINS}} \
             brazf/estoque
-      
