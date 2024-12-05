@@ -28,19 +28,7 @@ jobs:
     - name: Login Docker
       run: docker login -u brazf -p ${{secrets.DOCKERHUB_TOKEN}}
     - name: Build docker image
-      run: |
-          docker build \
-          --build-arg DB_SERVER=${{secrets.DB_SERVER}} \
-          --build-arg DB_NAME=${{secrets.DB_NAME}} \
-          --build-arg DB_USERNAME=${{secrets.DB_USERNAME}} \
-          --build-arg DB_PASSWORD=${{secrets.DB_PASSWORD}} \
-          --build-arg APP_PROFILE=${{secrets.APP_PROFILE}} \
-          --build-arg CLIENT_ID=${{secrets.CLIENTID}} \
-          --build-arg CLIENT_SECRET=${{secrets.CLIENTSECRET}} \
-          --build-arg JWT_DURATION=${{secrets.JWT_DURATION}} \
-          --build-arg CORS_ORIGINS=${{secrets.CORS_ORIGINS}} \
-          -t brazf/estoque .
-
+      run: docker build -t brazf/estoque .
     - name: Push image docker
       run: docker push brazf/estoque
 
@@ -56,16 +44,4 @@ jobs:
       run: docker rm -f deploy_backend
 
     - name: Run docker container
-      run: |
-          docker run -d --restart unless-stopped -p 80:8080 \
-            --name deploy_backend \
-            -e DB_SERVER=${{secrets.DB_SERVER}} \
-            -e DB_NAME=${{secrets.DB_NAME}} \
-            -e DB_USERNAME=${{secrets.DB_USERNAME}} \
-            -e DB_PASSWORD=${{secrets.DB_PASSWORD}} \
-            -e APP_PROFILE=${{secrets.APP_PROFILE}} \
-            -e CLIENT_ID=${{secrets.CLIENTID}} \
-            -e CLIENT_SECRET=${{secrets.CLIENTSECRET}} \
-            -e JWT_DURATION=${{secrets.JWT_DURATION}} \
-            -e CORS_ORIGINS=${{secrets.CORS_ORIGINS}} \
-            brazf/estoque  
+      run: docker run -d --restart unless-stopped -p 80:8080 --name deploy_backend brazf/estoque
