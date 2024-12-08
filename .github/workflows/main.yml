@@ -39,23 +39,13 @@ jobs:
 
     - name: Pull image from docker hub
       run: docker pull brazf/estoque:latest
-      
-    - name: docker remove container
-      run: docker rm -f deploy_backend
-
-    - name: Run docker container
+    
+    - name: Stop and remove existing containers
       run: |
-          docker network create app_network || true
-          docker run -d --restart unless-stopped -p 8080:8080 \
-            --name deploy_backend \
-            --network app_network \
-            -e DB_SERVER=${{secrets.DB_SERVER}} \
-            -e DB_NAME=${{secrets.DB_NAME}} \
-            -e DB_USERNAME=${{secrets.DB_USERNAME}} \
-            -e DB_PASSWORD=${{secrets.DB_PASSWORD}} \
-            -e APP_PROFILE=${{secrets.APP_PROFILE}} \
-            -e CLIENT_ID=${{secrets.CLIENTID}} \
-            -e CLIENT_SECRET=${{secrets.CLIENTSECRET}} \
-            -e JWT_DURATION=${{secrets.JWT_DURATION}} \
-            -e CORS_ORIGINS=${{secrets.CORS_ORIGINS}} \
-            brazf/estoque
+        cd /path/to/docker-compose
+        docker-compose down || true
+
+    - name: Deploy with docker-compose
+      run: |
+        cd /path/to/docker-compose
+        docker-compose up -d
