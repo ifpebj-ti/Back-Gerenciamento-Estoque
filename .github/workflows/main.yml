@@ -42,10 +42,10 @@ jobs:
     
     - name: Stop and remove existing containers
       run: |
-        cd /home/ubuntu/docker-compose.yml
+        cd /home/ubuntu
         docker-compose down || true
 
     - name: Deploy with docker-compose
       run: |
-        cd /home/ubuntu/docker-compose.yml
+        cd /home/ubuntu
         docker-compose up -d
