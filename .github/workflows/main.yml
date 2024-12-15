@@ -37,7 +37,7 @@ jobs:
         mv estoque/target/site/jacoco/jacoco.xml jacoco.xml
       continue-on-error: false
 
-    generate-badge:
+  generate-badge:
       name: Generate Badge
       runs-on: ubuntu-latest
       needs: build
@@ -66,7 +66,7 @@ jobs:
           commit_message: "Atualização do badge de cobertura"
           file_pattern: coverage-badge.svg
 
-    deploy:
+  deploy:
     needs: build
     runs-on: self-hosted
     steps:
