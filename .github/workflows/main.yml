@@ -109,6 +109,13 @@ jobs:
         commit_message: "Atualização do badge de cobertura"
         file_pattern: coverage-badge.svg
 
+    - name: Upload Coverage Badge
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-badge
+        path: .github/badges/coverage-badge.svg
+      
+
   deploy:
     needs: generate-badge
     runs-on: self-hosted
