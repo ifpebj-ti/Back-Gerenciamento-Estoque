@@ -23,7 +23,7 @@ jobs:
     - name: build
       run: |
           cd estoque
-          mvn clean package -X
+          mvn clean verify package
   
     - name: Login Docker
       run: docker login -u brazf -p ${{secrets.DOCKERHUB_TOKEN}}
