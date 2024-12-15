@@ -106,13 +106,7 @@ jobs:
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git add README.md
         git commit -m "Atualizando o README com o badge de cobertura" || echo "Nada para commitar"
-        git push https://${{ secrets.GH_TOKEN }}@github.com/ifpebj-ti/Back-Gerenciamento-Estoque.git HEAD:main
-
-    - name: Commit Coverage Badge
-      uses: stefanzweifel/git-auto-commit-action@v4
-      with:
-        commit_message: "Atualização do badge de cobertura"
-        file_pattern: coverage-badge.svg
+        git push https://github-actions:${{ secrets.GH_TOKEN }}@github.com/ifpebj-ti/Back-Gerenciamento-Estoque.git HEAD:main
 
   deploy:
     needs: generate-badge
