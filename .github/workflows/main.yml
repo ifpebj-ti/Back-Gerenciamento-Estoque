@@ -103,7 +103,7 @@ jobs:
       uses: stefanzweifel/git-auto-commit-action@v4
       with:
         commit_message: "Atualização do badge de cobertura"
-        file_pattern: coverage-badge.svg
+        file_pattern: ".github/badges/coverage-badge.svg README.md"
 
     - name: Upload Coverage Badge
       uses: actions/upload-artifact@v3
