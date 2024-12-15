@@ -53,6 +53,13 @@ jobs:
       with:
         distribution: 'zulu'
         java-version: '17'
+
+    - name: Log Generated Files
+      run: |
+        echo "Listando arquivos no diretório target/site/jacoco:"
+        ls -R estoque/target/site/jacoco/
+        echo "Listando arquivos no diretório atual:"
+        ls -R .
   
     - name: Generate Coverage Badge
       uses: cicirello/jacoco-badge-generator@v2
