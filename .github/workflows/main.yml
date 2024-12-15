@@ -45,6 +45,11 @@ jobs:
         echo "Movido com sucesso. Verificando o diretório atual:"
         ls -R .
       continue-on-error: false
+    - name: Upload JaCoCo Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: jacoco-report
+        path: jacoco.csv
 
   generate-badge:
     name: Generate Badge
@@ -56,6 +61,11 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: true
+
+    - name: Download JaCoCo Report
+      uses: actions/download-artifact@v3
+      with:
+        name: jacoco-report
   
     - name: Set up JDK 17
       uses: actions/setup-java@v3
