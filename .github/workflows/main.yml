@@ -82,10 +82,11 @@ jobs:
           exit 1
         fi
         echo "Arquivo encontrado. Prosseguindo..."
+
+    - name: Create Badge Directory
+      run: mkdir -p .github/badges
   
     - name: Generate Coverage Badge
-      run: |
-        mkdir -p .github/badges
       uses: cicirello/jacoco-badge-generator@v2
       with:
         jacoco-csv-file: jacoco.csv
