@@ -10,11 +10,13 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.superestoque.estoque.entities.Role;
 import com.superestoque.estoque.entities.User;
+import com.superestoque.estoque.entities.dto.RoleDTO;
 import com.superestoque.estoque.entities.dto.UserDTO;
 import com.superestoque.estoque.entities.dto.UserInsertDTO;
 import com.superestoque.estoque.entities.dto.UserUpdatePasswordDTO;
@@ -61,7 +63,6 @@ public class UserServiceTests {
 		Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(entity));
 		Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
 		Mockito.when(repository.findByEmail(existingEmail)).thenReturn(entity);
-		Mockito.when(repository.findByEmail(existingEmail)).thenReturn(null);
 		Mockito.when(repository.getReferenceById(existingId)).thenReturn(entity);
 		Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
 		Mockito.doNothing().when(repository).deleteById(existingId);
@@ -163,4 +164,56 @@ public class UserServiceTests {
 		Mockito.verify(repository, Mockito.times(1)).findById(nonExistingId);
 		Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any(User.class));
 	}
+
+	@Test
+	public void loadUserByUsernameShouldReturnUserWhenEmailExists() {
+		UserDetails result = service.loadUserByUsername(existingEmail);
+
+		Assertions.assertNotNull(result);
+		Assertions.assertEquals("Capitão@vingadores.com", result.getUsername());
+		Mockito.verify(repository, Mockito.times(1)).findByEmail(existingEmail);
+	}
+
+	@Test
+	public void copyInsertDtoToEntityShouldCopyFieldsCorrectly() {
+		UserInsertDTO dto = new UserInsertDTO(null, "Test User", "test@test.com", true, "123456");
+		dto.getRoles().add(new RoleDTO(role.getId(), "ROLE_ADMIN"));
+
+		UserDTO user = service.saveNewUser(dto);
+
+		Assertions.assertEquals(dto.getName(), user.getName());
+		Assertions.assertEquals(dto.getEmail(), user.getEmail());
+	}
+
+	@Test
+	public void desactivateUserShouldChangeStatusToFalse() {
+		service.desactivateUser(existingId);
+
+		Optional<User> user = repository.findById(existingId);
+		Assertions.assertTrue(user.isPresent());
+		Assertions.assertFalse(user.get().isStatus());
+		Mockito.verify(repository, Mockito.times(1)).save(user.get());
+	}
+
+	@Test
+	public void updatePasswordShouldEncodePasswordCorrectly() {
+		UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO("newPassword123");
+		service.updatePassword(existingId, dto);
+
+		Mockito.verify(repository, Mockito.times(1)).findById(existingId);
+		Mockito.verify(repository, Mockito.times(1)).save(ArgumentMatchers.any(User.class));
+	}
+
+	@Test
+	public void updateRoleShouldNotDuplicateRole() {
+		Role existingRole = new Role(role.getId(), "ROLE_ADMIN");
+		entity.getRoles().add(existingRole);
+
+		service.updateRole(existingId, role.getId());
+
+		Assertions.assertEquals(1, entity.getRoles().size());
+		Assertions.assertTrue(entity.getRoles().contains(existingRole));
+		Mockito.verify(repository, Mockito.times(1)).save(entity);
+	}
+
 }
