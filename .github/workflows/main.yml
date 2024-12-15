@@ -22,8 +22,14 @@ jobs:
 
     - name: build
       run: |
+          echo "Entrando no diretório 'estoque' e iniciando o build..."
           cd estoque
           mvn clean verify package
+          echo "Build concluído."
+          echo "Listando arquivos gerados em 'target':"
+          ls -R target
+          echo "Verificando 'target/site/jacoco':"
+          ls -R target/site/jacoco || echo "Diretório 'target/site/jacoco' não encontrado!"
   
     - name: Login Docker
       run: docker login -u brazf -p ${{secrets.DOCKERHUB_TOKEN}}
@@ -34,8 +40,10 @@ jobs:
     - name: Save JaCoCo Report
       if: success()
       run: |
-        mv estoque/target/site/jacoco/jacoco.xml jacoco.xml
+        echo "Movendo o arquivo 'jacoco.csv' para o diretório raiz do projeto..."
         mv estoque/target/site/jacoco/jacoco.csv jacoco.csv
+        echo "Movido com sucesso. Verificando o diretório atual:"
+        ls -R .
       continue-on-error: false
 
   generate-badge:
@@ -54,6 +62,16 @@ jobs:
       with:
         distribution: 'zulu'
         java-version: '17'
+
+    - name: Confirm JaCoCo CSV Exists
+      run: |
+        echo "Confirmando a presença do arquivo 'jacoco.csv' antes de gerar o badge:"
+        ls -R
+        if [ ! -f "jacoco.csv" ]; then
+          echo "Erro: Arquivo 'jacoco.csv' não encontrado!"
+          exit 1
+        fi
+        echo "Arquivo encontrado. Prosseguindo..."
   
     - name: Generate Coverage Badge
       uses: cicirello/jacoco-badge-generator@v2
