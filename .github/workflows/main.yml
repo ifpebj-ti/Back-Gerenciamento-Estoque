@@ -91,22 +91,16 @@ jobs:
         coverage-badge-filename: coverage-badge.svg
         generate-coverage-badge: true
 
-    - name: Add Badge to README
+    - name: Deploy Badge to GitHub Pages
       run: |
-        BADGE_MARKDOWN="![Cobertura de Testes](.github/badges/coverage-badge.svg)"
-        if grep -q "![Cobertura de Testes]" README.md; then
-          sed -i "s|!\[Cobertura de Testes\](.*)|$BADGE_MARKDOWN|" README.md
-        else
-          echo -e "$BADGE_MARKDOWN\n\n$(cat README.md)" > README.md
-        fi
-
-    - name: Commit README with Badge
-      run: |
+        mkdir -p docs/badges
+        mv .github/badges/coverage-badge.svg docs/badges/
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add README.md
-        git commit -m "Atualizando o README com o badge de cobertura" || echo "Nada para commitar"
-        git push https://github-actions:${{ secrets.GH_TOKEN }}@github.com/ifpebj-ti/Back-Gerenciamento-Estoque.git HEAD:main
+        git add docs/badges/coverage-badge.svg
+        git commit -m "Atualizando badge no GitHub Pages"
+        git push https://${{ secrets.GH_TOKEN }}@github.com/ifpebj-ti/Back-Gerenciamento-Estoque.git HEAD:main
+
 
   deploy:
     needs: generate-badge
