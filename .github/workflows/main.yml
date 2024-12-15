@@ -37,10 +37,6 @@ jobs:
         mv estoque/target/site/jacoco/jacoco.xml jacoco.xml
         mv estoque/target/site/jacoco/jacoco.csv jacoco.csv
       continue-on-error: false
-    - name: Verificar Arquivos Antes do Gerador
-      run: |
-        echo "Arquivos no diretório atual:"
-        ls -l
 
   generate-badge:
     name: Generate Badge
@@ -62,9 +58,10 @@ jobs:
     - name: Generate Coverage Badge
       uses: cicirello/jacoco-badge-generator@v2
       with:
-        jacoco-xml: jacoco.xml
         jacoco-csv-file: jacoco.csv
-        badge-output: coverage-badge.svg
+        badges-directory: .github/badges
+        coverage-badge-filename: coverage-badge.svg
+        generate-coverage-badge: true
 
     - name: Commit Coverage Badge
       uses: stefanzweifel/git-auto-commit-action@v4
