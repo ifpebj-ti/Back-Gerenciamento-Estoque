@@ -135,7 +135,7 @@
 										<limit>
 											<counter>INSTRUCTION</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.50</minimum>
+											<minimum>0.70</minimum>
 										</limit>
 									</limits>
 								</rule>
@@ -153,6 +153,13 @@
 						<exclude>**/services/exceptions/**</exclude>
 						<exclude>**/services/validation/**</exclude>
 					</excludes>
+					<dataFile>${project.build.directory}/jacoco.exec</dataFile>
+					<outputDirectory>${project.build.directory}/site/jacoco</outputDirectory>
+					<reports>
+						<xml>true</xml>
+						<csv>true</csv>
+						<html>true</html>
+					</reports>
 				</configuration>
 			</plugin>
 		</plugins>

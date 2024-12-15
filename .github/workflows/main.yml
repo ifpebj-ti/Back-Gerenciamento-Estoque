@@ -67,7 +67,7 @@ jobs:
         file_pattern: coverage-badge.svg
 
   deploy:
-    needs: build
+    needs: generate-badge
     runs-on: self-hosted
     steps:
     
