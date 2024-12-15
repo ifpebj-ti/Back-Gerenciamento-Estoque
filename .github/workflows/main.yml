@@ -75,6 +75,16 @@ jobs:
         coverage-badge-filename: coverage-badge.svg
         generate-coverage-badge: true
 
+    - name: List Badge Directory
+      run: |
+        echo "Conteúdo de .github/badges:"
+        ls -la .github/badges
+
+    - name: Print README Before Update
+      run: |
+        echo "Conteúdo atual do README.md:"
+        cat README.md
+
     - name: Add Badge to README
       run: |
         BADGE_MARKDOWN="![Cobertura de Testes](.github/badges/coverage-badge.svg)"
@@ -84,13 +94,16 @@ jobs:
           echo -e "$BADGE_MARKDOWN\n\n$(cat README.md)" > README.md
         fi
 
-    - name: Commit and Push Changes
+    - name: Print README After Update
       run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add README.md .github/badges/coverage-badge.svg
-        git commit -m "Atualização do README com o badge de cobertura"
-        git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+        echo "Conteúdo do README.md após atualização:"
+        cat README.md
+
+    - name: Commit Coverage Badge
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "Atualização do badge de cobertura"
+        file_pattern: coverage-badge.svg
 
     - name: Upload Coverage Badge
       uses: actions/upload-artifact@v3
@@ -98,7 +111,6 @@ jobs:
         name: coverage-badge
         path: .github/badges/coverage-badge.svg
       
-
   deploy:
     needs: generate-badge
     runs-on: self-hosted
