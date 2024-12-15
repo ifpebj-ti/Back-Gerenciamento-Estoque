@@ -24,13 +24,6 @@ jobs:
       run: |
           cd estoque
           mvn clean verify package
-
-    - name: Check Generated Files
-      run: |
-        echo "Listando arquivos gerados na pasta target:"
-        ls -R estoque/target
-        echo "Listando arquivos no site/jacoco:"
-        ls -R estoque/target/site/jacoco
   
     - name: Login Docker
       run: docker login -u brazf -p ${{secrets.DOCKERHUB_TOKEN}}
@@ -42,7 +35,12 @@ jobs:
       if: success()
       run: |
         mv estoque/target/site/jacoco/jacoco.xml jacoco.xml
+        mv estoque/target/site/jacoco/jacoco.csv jacoco.csv
       continue-on-error: false
+    - name: Verificar Arquivos Antes do Gerador
+      run: |
+        echo "Arquivos no diretório atual:"
+        ls -l
 
   generate-badge:
     name: Generate Badge
@@ -60,18 +58,12 @@ jobs:
       with:
         distribution: 'zulu'
         java-version: '17'
-
-    - name: Log Generated Files
-      run: |
-        echo "Listando arquivos no diretório target/site/jacoco:"
-        ls -R estoque/target/site/jacoco/
-        echo "Listando arquivos no diretório atual:"
-        ls -R .
   
     - name: Generate Coverage Badge
       uses: cicirello/jacoco-badge-generator@v2
       with:
         jacoco-xml: jacoco.xml
+        jacoco-csv-file: jacoco.csv
         badge-output: coverage-badge.svg
 
     - name: Commit Coverage Badge
