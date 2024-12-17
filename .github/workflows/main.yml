@@ -56,6 +56,12 @@ jobs:
       run: |
         docker-compose down || true
 
+    - name: Debug .env file
+      run: cat .env
+
+    - name: Validate docker-compose syntax
+      run: docker-compose config
+
     - name: Deploy application with docker-compose
       run: |
         docker-compose up -d --env-file .env
