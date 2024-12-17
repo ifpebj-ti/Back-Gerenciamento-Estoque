@@ -37,6 +37,11 @@ jobs:
     runs-on: self-hosted
     steps:
 
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        path: .
+    
     - name: Pull image from docker hub
       run: docker pull brazf/estoque:latest
 
