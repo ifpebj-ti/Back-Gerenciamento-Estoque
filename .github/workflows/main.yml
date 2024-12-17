@@ -36,11 +36,6 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
-
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        path: .
     
     - name: Pull image from docker hub
       run: docker pull brazf/estoque:latest
@@ -59,10 +54,8 @@ jobs:
 
     - name: Stop and remove existing containers
       run: |
-        cd docker
         docker-compose down || true
 
     - name: Deploy application with docker-compose
       run: |
-        cd docker
         docker-compose up -d --env-file ../.env
