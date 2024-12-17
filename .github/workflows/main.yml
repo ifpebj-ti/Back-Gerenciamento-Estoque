@@ -52,12 +52,6 @@ jobs:
         echo "CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}" >> .env
         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
 
-    - name: Debug .env file
-      run: cat .env
-
-    - name: Validate docker-compose syntax
-      run: docker-compose config
-
     - name: Stop and remove existing containers
       run: |
         docker-compose down || true
@@ -65,6 +59,4 @@ jobs:
     - name: Deploy application with docker-compose
       run: |
         docker-compose up -d
-        docker-compose ps
-        docker-compose logs
         
