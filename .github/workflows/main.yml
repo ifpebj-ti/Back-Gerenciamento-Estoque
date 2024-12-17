@@ -58,7 +58,7 @@ jobs:
 
     - name: Deploy application with docker-compose
       run: |
-        docker-compose up -d --env-file ../.env
+        docker-compose up -d --env-file .env
         docker-compose ps
         docker-compose logs
         
