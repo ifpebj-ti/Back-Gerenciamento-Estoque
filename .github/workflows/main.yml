@@ -39,13 +39,25 @@ jobs:
 
     - name: Pull image from docker hub
       run: docker pull brazf/estoque:latest
-    
+
+    - name: Create .env file
+      run: |
+        echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+        echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+        echo "APP_PROFILE=${{ secrets.APP_PROFILE }}" >> .env
+        echo "CLIENT_ID=${{ secrets.CLIENT_ID }}" >> .env
+        echo "CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> .env
+        echo "JWT_DURATION=${{ secrets.JWT_DURATION }}" >> .env
+        echo "CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}" >> .env
+        echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+
     - name: Stop and remove existing containers
       run: |
         cd /path/to/docker-compose
         docker-compose down || true
 
-    - name: Deploy with docker-compose
+    - name: Deploy application with docker-compose
       run: |
-        cd /path/to/docker-compose
-        docker-compose up -d
+        cd docker
+        docker-compose up -d --env-file ../.env
