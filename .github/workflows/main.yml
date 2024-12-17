@@ -54,7 +54,7 @@ jobs:
 
     - name: Stop and remove existing containers
       run: |
-        cd /path/to/docker-compose
+        cd docker
         docker-compose down || true
 
     - name: Deploy application with docker-compose
