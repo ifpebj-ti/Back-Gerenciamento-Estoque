@@ -81,10 +81,9 @@ jobs:
       run: |
         BADGE_MARKDOWN="![Cobertura de Testes](.github/badges/coverage-badge.svg)"
         if grep -q "![Cobertura de Testes]" README.md; then
-          sed -i "s|!\[Cobertura de Testes\](.*)|$BADGE_MARKDOWN|" README.md
-        else
-          echo -e "$BADGE_MARKDOWN\n\n$(cat README.md)" > README.md
+          sed -i "/!\[Cobertura de Testes\]/d" README.md
         fi
+        echo -e "$BADGE_MARKDOWN\n\n$(cat README.md)" > README.md
 
     - name: Commit Coverage Badge
       uses: stefanzweifel/git-auto-commit-action@v4
