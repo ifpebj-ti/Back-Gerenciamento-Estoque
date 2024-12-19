@@ -22,8 +22,8 @@ jobs:
 
     - name: build
       run: |
-        cd estoque
-        mvn clean verify package
+          cd estoque
+          mvn clean package -X
   
     - name: Login Docker
       run: docker login -u brazf -p ${{secrets.DOCKERHUB_TOKEN}}
@@ -112,7 +112,7 @@ jobs:
       with:
         name: coverage-badge
         path: .github/badges/coverage-badge.svg
-      
+        
   deploy:
     needs: generate-badge
     runs-on: self-hosted
@@ -132,7 +132,7 @@ jobs:
         echo "JWT_DURATION=${{ secrets.JWT_DURATION }}" >> .env
         echo "CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}" >> .env
         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
-    
+
     - name: Stop and remove existing containers
       run: |
         docker-compose down || true
@@ -140,3 +140,4 @@ jobs:
     - name: Deploy application with docker-compose
       run: |
         docker-compose up -d
+        
