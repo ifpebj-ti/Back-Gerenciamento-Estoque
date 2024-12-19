@@ -144,10 +144,10 @@ public class ProductControllerIT {
 		MockMultipartFile photo = new MockMultipartFile("photo", "photo.jpg", "image/jpeg",
 				"fake-image-data".getBytes());
 
-		ResultActions result = mockMvc
-				.perform(MockMvcRequestBuilders.multipart("/products").file(photo).param("name", "New Product")
-						.param("quantity", "100").param("critical_quantity", "10").param("unit_value", "19.99")
-						.header("Authorization", "Bearer " + accessToken).contentType(MediaType.MULTIPART_FORM_DATA));
+		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.multipart("/products").file(photo)
+				.param("name", "New Product").param("quantity", "100").param("description", "descrição")
+				.param("critical_quantity", "10").param("unit_value", "19.99").param("categories", "1")
+				.header("Authorization", "Bearer " + accessToken).contentType(MediaType.MULTIPART_FORM_DATA));
 
 		result.andExpect(status().isCreated());
 		result.andExpect(jsonPath("$.id").isNotEmpty());
@@ -162,8 +162,9 @@ public class ProductControllerIT {
 				"fake-image-data".getBytes());
 
 		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.multipart("/products").file(photo)
-				.param("name", "").param("quantity", "-1").param("critical_quantity", "-5").param("unit_value", "0")
-				.header("Authorization", "Bearer " + accessToken).contentType(MediaType.MULTIPART_FORM_DATA));
+				.param("name", "").param("quantity", "-1").param("description", "").param("critical_quantity", "-5")
+				.param("unit_value", "0").param("categories", "1").header("Authorization", "Bearer " + accessToken)
+				.contentType(MediaType.MULTIPART_FORM_DATA));
 
 		result.andExpect(status().isUnprocessableEntity());
 	}
@@ -175,10 +176,10 @@ public class ProductControllerIT {
 		MockMultipartFile photo = new MockMultipartFile("photo", "photo.jpg", "image/jpeg",
 				"fake-image-data".getBytes());
 
-		ResultActions result = mockMvc
-				.perform(MockMvcRequestBuilders.multipart("/products").file(photo).param("name", "New Product")
-						.param("quantity", "100").param("critical_quantity", "10").param("unit_value", "19.99")
-						.header("Authorization", "Bearer " + accessToken).contentType(MediaType.MULTIPART_FORM_DATA));
+		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.multipart("/products").file(photo)
+				.param("name", "New Product").param("quantity", "100").param("critical_quantity", "10")
+				.param("description", "descrição").param("unit_value", "19.99").param("categories", "1")
+				.header("Authorization", "Bearer " + accessToken).contentType(MediaType.MULTIPART_FORM_DATA));
 
 		result.andExpect(status().isForbidden());
 	}
@@ -191,9 +192,10 @@ public class ProductControllerIT {
 				"fake-image-data".getBytes());
 
 		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.multipart("/products/{id}", existingId)
-				.file(photo).param("name", "Updated Product").param("quantity", "200").param("critical_quantity", "20")
-				.param("unit_value", "39.99").header("Authorization", "Bearer " + accessToken)
-				.contentType(MediaType.MULTIPART_FORM_DATA).with(request -> {
+				.file(photo).param("name", "Updated Product").param("quantity", "200").param("description", "descrição")
+				.param("critical_quantity", "20").param("unit_value", "39.99")
+				.header("Authorization", "Bearer " + accessToken).contentType(MediaType.MULTIPART_FORM_DATA)
+				.with(request -> {
 					request.setMethod("PUT");
 					return request;
 				}));
@@ -210,14 +212,14 @@ public class ProductControllerIT {
 		MockMultipartFile photo = new MockMultipartFile("photo", "photo.jpg", "image/jpeg",
 				"fake-image-data".getBytes());
 
-		ResultActions result = mockMvc
-				.perform(MockMvcRequestBuilders.multipart("/products/{id}", nonExistingId).file(photo)
-						.param("name", "Non-existent Product").param("quantity", "300").param("critical_quantity", "30")
-						.param("unit_value", "59.99").header("Authorization", "Bearer " + accessToken)
-						.contentType(MediaType.MULTIPART_FORM_DATA).with(request -> {
-							request.setMethod("PUT");
-							return request;
-						}));
+		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.multipart("/products/{id}", nonExistingId)
+				.file(photo).param("name", "Non-existent Product").param("quantity", "300")
+				.param("description", "descrição").param("critical_quantity", "30").param("unit_value", "59.99")
+				.header("Authorization", "Bearer " + accessToken).contentType(MediaType.MULTIPART_FORM_DATA)
+				.with(request -> {
+					request.setMethod("PUT");
+					return request;
+				}));
 
 		result.andExpect(status().isNotFound());
 	}
@@ -230,9 +232,10 @@ public class ProductControllerIT {
 				"fake-image-data".getBytes());
 
 		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.multipart("/products/{id}", existingId)
-				.file(photo).param("name", "Updated Product").param("quantity", "200").param("critical_quantity", "20")
-				.param("unit_value", "39.99").header("Authorization", "Bearer " + accessToken)
-				.contentType(MediaType.MULTIPART_FORM_DATA).with(request -> {
+				.file(photo).param("name", "Updated Product").param("quantity", "200").param("description", "descrição")
+				.param("critical_quantity", "20").param("unit_value", "39.99")
+				.header("Authorization", "Bearer " + accessToken).contentType(MediaType.MULTIPART_FORM_DATA)
+				.with(request -> {
 					request.setMethod("PUT");
 					return request;
 				}));

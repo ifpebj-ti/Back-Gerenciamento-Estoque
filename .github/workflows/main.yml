@@ -46,6 +46,8 @@ jobs:
     name: Generate Badge
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      contents: write
     steps:
 
     - name: Checkout
@@ -115,7 +117,7 @@ jobs:
     needs: generate-badge
     runs-on: self-hosted
     steps:
-    
+
     - name: Pull image from docker hub
       run: docker pull brazf/estoque:latest
 

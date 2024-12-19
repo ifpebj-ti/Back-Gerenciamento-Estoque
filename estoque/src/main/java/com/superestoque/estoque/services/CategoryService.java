@@ -1,6 +1,7 @@
 package com.superestoque.estoque.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -39,6 +40,14 @@ public class CategoryService {
 		List<CategoryDTO> entities = objs.stream().map(category -> new CategoryDTO(category))
 				.collect(Collectors.toList());
 		return entities;
+	}
+	
+	@Transactional
+	public CategoryDTO findById(Long id) {
+		Optional<Category> obj = repository.findById(id);
+		Category category = obj.orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada."));
+		LOG.info("Categoria " + category.getName() + " retornado com sucesso!");
+		return new CategoryDTO(category);
 	}
 
 	@Transactional
