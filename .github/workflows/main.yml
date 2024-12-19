@@ -77,16 +77,6 @@ jobs:
         coverage-badge-filename: coverage-badge.svg
         generate-coverage-badge: true
 
-    - name: List Badge Directory
-      run: |
-        echo "Conteúdo de .github/badges:"
-        ls -la .github/badges
-
-    - name: Print README Before Update
-      run: |
-        echo "Conteúdo atual do README.md:"
-        cat README.md
-
     - name: Add Badge to README
       run: |
         BADGE_MARKDOWN="![Cobertura de Testes](.github/badges/coverage-badge.svg)"
@@ -95,11 +85,6 @@ jobs:
         else
           echo -e "$BADGE_MARKDOWN\n\n$(cat README.md)" > README.md
         fi
-
-    - name: Print README After Update
-      run: |
-        echo "Conteúdo do README.md após atualização:"
-        cat README.md
 
     - name: Commit Coverage Badge
       uses: stefanzweifel/git-auto-commit-action@v4
