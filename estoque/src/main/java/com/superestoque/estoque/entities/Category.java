@@ -2,6 +2,8 @@ package com.superestoque.estoque.entities;
 
 import java.io.Serializable;
 
+import com.superestoque.estoque.entities.dto.CategoryDTO;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +31,11 @@ public class Category implements Serializable {
 	public Category(Long id, String name) {
 		this.id = id;
 		this.name = name;
+	}
+
+	public Category(CategoryDTO entity) {
+		this.id = entity.getId();
+		this.name = entity.getName();
 	}
 
 	public Long getId() {

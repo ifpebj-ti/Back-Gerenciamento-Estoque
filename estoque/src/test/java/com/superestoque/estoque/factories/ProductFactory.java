@@ -9,8 +9,7 @@ import com.superestoque.estoque.entities.dto.ProductDTO;
 public class ProductFactory {
 
 	public static Product createProduct(Company company) {
-		Product product = new Product(50L, "Produto 15", 10, null,
-				2, BigDecimal.TEN);
+		Product product = new Product(50L, "Produto 15", 10, "Descrição", null, 2, BigDecimal.TEN);
 		product.setCompany(company);
 		return product;
 	}

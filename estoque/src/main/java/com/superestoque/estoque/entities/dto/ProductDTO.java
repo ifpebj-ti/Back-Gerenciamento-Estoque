@@ -2,7 +2,10 @@ package com.superestoque.estoque.entities.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.superestoque.estoque.entities.Category;
 import com.superestoque.estoque.entities.Product;
 
 import jakarta.persistence.Column;
@@ -21,6 +24,7 @@ public class ProductDTO implements Serializable {
 	private String name;
 	@Min(value = 0)
 	private int quantity;
+	private String description;
 	@NotNull
 	private byte[] photo;
 	@Min(value = 0)
@@ -31,24 +35,28 @@ public class ProductDTO implements Serializable {
 	@Column(scale = 2)
 	@Min(0)
 	private BigDecimal stockValue;
+	private Set<CategoryDTO> categories;
 
 	public ProductDTO() {
 	}
 
-	public ProductDTO(Long id, String name, int quantity, byte[] photo, int critical_quantity, BigDecimal unitValue,
-			BigDecimal stockValue) {
+	public ProductDTO(Long id, String name, int quantity, String description, byte[] photo, int critical_quantity,
+			BigDecimal unitValue, BigDecimal stockValue) {
 		this.id = id;
 		this.name = name;
 		this.quantity = quantity;
+		this.description = description;
 		this.photo = photo;
 		this.critical_quantity = critical_quantity;
 		this.unitValue = unitValue;
 		this.stockValue = stockValue;
 	}
 
-	public ProductDTO(String name, int quantity, byte[] photo, int critical_quantity, BigDecimal unitValue) {
+	public ProductDTO(String name, int quantity, String description, byte[] photo, int critical_quantity,
+			BigDecimal unitValue) {
 		this.name = name;
 		this.quantity = quantity;
+		this.description = description;
 		this.photo = photo;
 		this.critical_quantity = critical_quantity;
 		this.unitValue = unitValue;
@@ -58,10 +66,23 @@ public class ProductDTO implements Serializable {
 		this.id = entity.getId();
 		this.name = entity.getName();
 		this.quantity = entity.getQuantity();
+		this.description = entity.getDescription();
 		this.photo = entity.getPhoto();
 		this.critical_quantity = entity.getCritical_quantity();
 		this.unitValue = entity.getUnitValue();
 		this.stockValue = entity.getStockValue();
+	}
+
+	public ProductDTO(Product entity, Set<Category> categories) {
+		this.id = entity.getId();
+		this.name = entity.getName();
+		this.quantity = entity.getQuantity();
+		this.description = entity.getDescription();
+		this.photo = entity.getPhoto();
+		this.critical_quantity = entity.getCritical_quantity();
+		this.unitValue = entity.getUnitValue();
+		this.stockValue = entity.getStockValue();
+		this.categories = categories.stream().map(category -> new CategoryDTO(category)).collect(Collectors.toSet());
 	}
 
 	public Long getId() {
@@ -86,6 +107,14 @@ public class ProductDTO implements Serializable {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public byte[] getPhoto() {
@@ -118,6 +147,10 @@ public class ProductDTO implements Serializable {
 
 	public void setStockValue(BigDecimal stockValue) {
 		this.stockValue = stockValue;
+	}
+
+	public Set<CategoryDTO> getCategories() {
+		return categories;
 	}
 
 }

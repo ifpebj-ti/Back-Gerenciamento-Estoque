@@ -28,6 +28,7 @@ public class Product implements Serializable {
 	private Long id;
 	private String name;
 	private int quantity;
+	private String description;
 	@Lob
 	private byte[] photo;
 	private int critical_quantity;
@@ -43,10 +44,12 @@ public class Product implements Serializable {
 	public Product() {
 	}
 
-	public Product(Long id, String name, int quantity, byte[] photo, int critical_quantity, BigDecimal unitValue) {
+	public Product(Long id, String name, int quantity, String description, byte[] photo, int critical_quantity,
+			BigDecimal unitValue) {
 		this.id = id;
 		this.name = name;
 		this.quantity = quantity;
+		this.description = description;
 		this.photo = photo;
 		this.critical_quantity = critical_quantity;
 		this.unitValue = unitValue;
@@ -74,6 +77,14 @@ public class Product implements Serializable {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public byte[] getPhoto() {
@@ -114,6 +125,10 @@ public class Product implements Serializable {
 
 	public void calculateStockValue() {
 		this.stockValue = unitValue.multiply(new BigDecimal(quantity));
+	}
+
+	public Set<Category> getCategories() {
+		return categories;
 	}
 
 	@Override

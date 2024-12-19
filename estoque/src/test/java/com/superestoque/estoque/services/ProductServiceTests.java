@@ -1,5 +1,6 @@
 package com.superestoque.estoque.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +20,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.superestoque.estoque.entities.Company;
 import com.superestoque.estoque.entities.Product;
 import com.superestoque.estoque.entities.User;
+import com.superestoque.estoque.entities.dto.CategoryDTO;
 import com.superestoque.estoque.entities.dto.CompanyDTO;
 import com.superestoque.estoque.entities.dto.ProductDTO;
+import com.superestoque.estoque.factories.CategoryFactory;
 import com.superestoque.estoque.factories.CompanyFactory;
 import com.superestoque.estoque.factories.ProductFactory;
 import com.superestoque.estoque.factories.UserFactory;
@@ -43,6 +46,9 @@ public class ProductServiceTests {
 	@Mock
 	private CompanyService companyService;
 
+	@Mock
+	private CategoryService categoryService;
+
 	private Long existingId;
 	private Long nonExistingId;
 	private Long existingIdCategory;
@@ -51,6 +57,8 @@ public class ProductServiceTests {
 	private Company company;
 	private CompanyDTO companyDTO;
 	private User user;
+	private List<Long> categories = new ArrayList<>();
+	private CategoryDTO categoryDTO;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -64,6 +72,8 @@ public class ProductServiceTests {
 		product.setCompany(company);
 		user = UserFactory.createUser();
 		user.setCompany(company);
+		categories.add(1L);
+		categoryDTO = CategoryFactory.createCompanyDTO();
 
 		Mockito.when(authService.authenticated()).thenReturn(user);
 		Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(product));
@@ -75,6 +85,7 @@ public class ProductServiceTests {
 		Mockito.when(repository.existsById(existingId)).thenReturn(true);
 		Mockito.when(repository.existsById(nonExistingId)).thenReturn(false);
 		Mockito.when(companyService.findById()).thenReturn(companyDTO);
+		Mockito.when(categoryService.findById(ArgumentMatchers.anyLong())).thenReturn(categoryDTO);
 	}
 
 	@Test
@@ -126,7 +137,7 @@ public class ProductServiceTests {
 
 	@Test
 	public void saveNewProductShouldSaveAndReturnProductDTO() {
-		ProductDTO result = service.saveNewProduct(productDTO);
+		ProductDTO result = service.saveNewProduct(productDTO, categories);
 
 		Assertions.assertNotNull(result);
 		Assertions.assertEquals(product.getName(), result.getName());
@@ -158,10 +169,10 @@ public class ProductServiceTests {
 
 	@Test
 	public void saveNewProductShouldThrowValidMultiFormDataExceptionWhenNameIsInvalid() {
-		ProductDTO invalidDTO = new ProductDTO(null, "", 0, null, 0, null, null);
+		ProductDTO invalidDTO = new ProductDTO(null, "", 0, "", null, 0, null, null);
 
 		Assertions.assertThrows(ValidMultiFormDataException.class, () -> {
-			service.saveNewProduct(invalidDTO);
+			service.saveNewProduct(invalidDTO, categories);
 		});
 
 		Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any(Product.class));

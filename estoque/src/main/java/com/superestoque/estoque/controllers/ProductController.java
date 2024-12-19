@@ -3,6 +3,7 @@ package com.superestoque.estoque.controllers;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,7 +44,8 @@ public class ProductController {
 			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Forbidden\"}"))) })
 	@PreAuthorize("hasAnyRole('ADMIN','OPERATOR')")
 	@GetMapping
-	public ResponseEntity<Page<ProductDTO>> findAllProductsPagedByGroup(@RequestParam(value = "categoryId", required = false) Long categoryId, Pageable pageable) {
+	public ResponseEntity<Page<ProductDTO>> findAllProductsPagedByGroup(
+			@RequestParam(value = "categoryId", required = false) Long categoryId, Pageable pageable) {
 		Page<ProductDTO> products = service.findAllProductByCompanyIdPaged(pageable, categoryId);
 		return ResponseEntity.ok(products);
 	}
@@ -80,10 +82,11 @@ public class ProductController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(consumes = "multipart/form-data")
 	public ResponseEntity<ProductDTO> saveNewProduct(@RequestParam String name, @RequestParam int quantity,
-			@RequestParam("critical_quantity") int criticalQuantity, @RequestParam("unit_value") BigDecimal unitValue,
-			@RequestParam MultipartFile photo) throws IOException {
-		ProductDTO product = new ProductDTO(name, quantity, photo.getBytes(), criticalQuantity, unitValue);
-		ProductDTO entity = service.saveNewProduct(product);
+			@RequestParam String description, @RequestParam("critical_quantity") int criticalQuantity,
+			@RequestParam("unit_value") BigDecimal unitValue, @RequestParam MultipartFile photo,
+			@RequestParam List<Long> categories) throws IOException {
+		ProductDTO product = new ProductDTO(name, quantity, description, photo.getBytes(), criticalQuantity, unitValue);
+		ProductDTO entity = service.saveNewProduct(product, categories);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(entity.getId()).toUri();
 		return ResponseEntity.created(uri).body(entity);
 	}
@@ -96,9 +99,10 @@ public class ProductController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = "/{id}", consumes = "multipart/form-data")
 	public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestParam String name,
-			@RequestParam int quantity, @RequestParam("critical_quantity") int criticalQuantity,
-			@RequestParam("unit_value") BigDecimal unitValue, @RequestParam MultipartFile photo) throws IOException {
-		ProductDTO product = new ProductDTO(name, quantity, photo.getBytes(), criticalQuantity, unitValue);
+			@RequestParam int quantity, @RequestParam String description,
+			@RequestParam("critical_quantity") int criticalQuantity, @RequestParam("unit_value") BigDecimal unitValue,
+			@RequestParam MultipartFile photo) throws IOException {
+		ProductDTO product = new ProductDTO(name, quantity, description, photo.getBytes(), criticalQuantity, unitValue);
 		ProductDTO entity = service.updateProduct(id, product);
 		return ResponseEntity.ok(entity);
 	}
