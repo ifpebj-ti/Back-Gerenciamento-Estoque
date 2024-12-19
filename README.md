@@ -63,9 +63,22 @@ Projeto desenvolvido para avaliação das cadeiras de tópicos avançados em pro
 
   #### **Perfil de Teste (Produção)**
   
-  - **Banco de Dados**: Utiliza o MySQL...
+  - **Banco de Dados**: Utiliza uma imagem do MySQL para persistência dos dados.
+  - **Configuração do Banco de Dados**: As variáveis de ambiente necessárias para configurar o banco de dados (como nome do banco, usuário e senha) devem ser especificadas no arquivo `application-prod.properties`. Esse arquivo fornece suporte para o perfil de produção, com segurança e integração ao banco de dados.
 
 ## Variáveis de ambiente
+
+  As seguintes variáveis de ambiente podem ser configuradas para ajustar o comportamento da aplicação:
+
+  - **`APP_PROFILE`**: Define o perfil ativo da aplicação (`test` ou `prod`). Valor padrão: `test`.
+  - **`CLIENT_ID`**: ID do cliente para autenticação OAuth2. Valor padrão: `myclientid`.
+  - **`CLIENT_SECRET`**: Segredo do cliente para autenticação OAuth2. Valor padrão: `myclientsecret`.
+  - **`JWT_DURATION`**: Duração do token JWT em segundos. Valor padrão: `86400` (24 horas).
+  - **`CORS_ORIGINS`**: Configura as origens permitidas para requisições CORS. Valor padrão: `http://localhost:3000`.
+  - **`DB_NAME`**: Nome do banco de dados (apenas no perfil `prod`).
+  - **`DB_USERNAME`**: Nome de usuário do banco de dados (apenas no perfil `prod`).
+  - **`DB_PASSWORD`**: Senha do banco de dados (apenas no perfil `prod`).
+  - **`MYSQL_ROOT_PASSWORD`**: Senha do usuário root do MySQL.
 
 ## Licença
  Este projeto está licenciado sob a licença MIT.
