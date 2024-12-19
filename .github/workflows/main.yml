@@ -77,18 +77,27 @@ jobs:
         coverage-badge-filename: coverage-badge.svg
         generate-coverage-badge: true
 
-    - name: Add Badge to README
+    - name: Remove Old Badge
       run: |
-        BADGE_MARKDOWN="![Cobertura de Testes](.github/badges/coverage-badge.svg)"
         if grep -q "![Cobertura de Testes]" README.md; then
           sed -i "/!\[Cobertura de Testes\]/d" README.md
         fi
-        echo -e "$BADGE_MARKDOWN\n\n$(cat README.md)" > README.md
 
-    - name: Commit Coverage Badge
+    - name: Commit Removal of Old Badge
       uses: stefanzweifel/git-auto-commit-action@v4
       with:
-        commit_message: "Atualização do badge de cobertura"
+        commit_message: "Removendo badge antigo de cobertura"
+        file_pattern: "README.md"
+
+    - name: Add New Badge to README
+      run: |
+        BADGE_MARKDOWN="![Cobertura de Testes](.github/badges/coverage-badge.svg)"
+        echo -e "$BADGE_MARKDOWN\n\n$(cat README.md)" > README.md
+
+    - name: Commit New Badge
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "Adicionando novo badge de cobertura"
         file_pattern: ".github/badges/coverage-badge.svg README.md"
 
     - name: Upload Coverage Badge
