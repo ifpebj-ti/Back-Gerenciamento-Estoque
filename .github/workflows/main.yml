@@ -79,8 +79,8 @@ jobs:
 
     - name: Remove Old Badge
       run: |
-        if grep -q "![Cobertura de Testes]" README.md; then
-          sed -i "/!\[Cobertura de Testes\]/d" README.md
+        if grep -q "![Cobertura de Testes](.github/badges/coverage-badge.svg)" README.md; then
+          sed -i "/!\[Cobertura de Testes\](.github\/badges\/coverage-badge\.svg)/d" README.md
         fi
 
     - name: Commit Removal of Old Badge

@@ -59,7 +59,7 @@ public class ProductService {
 		Optional<Product> obj = repository.findById(id);
 		Product product = obj.orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado."));
 		LOG.info("Produto " + product.getName() + " retornado com sucesso!");
-		return new ProductDTO(product);
+		return new ProductDTO(product, product.getCategories());
 	}
 
 	@Transactional
@@ -82,10 +82,10 @@ public class ProductService {
 	}
 
 	@Transactional
-	public ProductDTO updateProduct(Long id, ProductDTO entity) {
+	public ProductDTO updateProduct(Long id, ProductDTO entity, List<Long> categories) {
 		Optional<Product> obj = repository.findById(id);
 		Product product = obj.orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado."));
-		updateData(product, entity);
+		updateData(product, entity, categories);
 		product = repository.save(product);
 		LOG.info("Atualizado dados do produto " + id + " com sucesso!");
 		return new ProductDTO(product);
@@ -112,7 +112,7 @@ public class ProductService {
 		}
 	}
 
-	private void updateData(Product product, ProductDTO entity) {
+	private void updateData(Product product, ProductDTO entity, List<Long> categories) {
 		validProduct(entity);
 		product.setName(entity.getName());
 		product.setPhoto(entity.getPhoto());
@@ -120,6 +120,15 @@ public class ProductService {
 		product.setDescription(entity.getDescription());
 		product.setUnitValue(entity.getUnitValue());
 		product.setCritical_quantity(entity.getCritical_quantity());
+		product.getCategories().clear();
+		if (categories.size() < 1) {
+			throw new ValidMultiFormDataException("O produto deve conter ao menos uma categoria.");
+		} else {
+			for (Long id : categories) {
+				CategoryDTO category = categoryService.findById(id);
+				product.getCategories().add(new Category(category));
+			}
+		}
 		product.calculateStockValue();
 	}
 

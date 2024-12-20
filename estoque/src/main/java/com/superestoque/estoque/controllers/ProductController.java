@@ -101,9 +101,9 @@ public class ProductController {
 	public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestParam String name,
 			@RequestParam int quantity, @RequestParam String description,
 			@RequestParam("critical_quantity") int criticalQuantity, @RequestParam("unit_value") BigDecimal unitValue,
-			@RequestParam MultipartFile photo) throws IOException {
+			@RequestParam MultipartFile photo, @RequestParam List<Long> categories) throws IOException {
 		ProductDTO product = new ProductDTO(name, quantity, description, photo.getBytes(), criticalQuantity, unitValue);
-		ProductDTO entity = service.updateProduct(id, product);
+		ProductDTO entity = service.updateProduct(id, product, categories);
 		return ResponseEntity.ok(entity);
 	}
 

@@ -149,7 +149,7 @@ public class ProductServiceTests {
 		ProductDTO updatedDTO = ProductFactory.createProductDTO(company);
 		Mockito.when(repository.save(ArgumentMatchers.any())).thenReturn(product);
 
-		ProductDTO result = service.updateProduct(existingId, updatedDTO);
+		ProductDTO result = service.updateProduct(existingId, updatedDTO, categories);
 
 		Assertions.assertNotNull(result);
 		Assertions.assertEquals("Produto 15", result.getName());
@@ -161,7 +161,7 @@ public class ProductServiceTests {
 		ProductDTO updatedDTO = ProductFactory.createProductDTO(company);
 
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-			service.updateProduct(nonExistingId, updatedDTO);
+			service.updateProduct(nonExistingId, updatedDTO, categories);
 		});
 
 		Mockito.verify(repository, Mockito.times(0)).save(ArgumentMatchers.any(Product.class));

@@ -193,7 +193,7 @@ public class ProductControllerIT {
 
 		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.multipart("/products/{id}", existingId)
 				.file(photo).param("name", "Updated Product").param("quantity", "200").param("description", "descrição")
-				.param("critical_quantity", "20").param("unit_value", "39.99")
+				.param("critical_quantity", "20").param("unit_value", "39.99").param("categories", "1")
 				.header("Authorization", "Bearer " + accessToken).contentType(MediaType.MULTIPART_FORM_DATA)
 				.with(request -> {
 					request.setMethod("PUT");
@@ -215,8 +215,8 @@ public class ProductControllerIT {
 		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.multipart("/products/{id}", nonExistingId)
 				.file(photo).param("name", "Non-existent Product").param("quantity", "300")
 				.param("description", "descrição").param("critical_quantity", "30").param("unit_value", "59.99")
-				.header("Authorization", "Bearer " + accessToken).contentType(MediaType.MULTIPART_FORM_DATA)
-				.with(request -> {
+				.param("categories", "1").header("Authorization", "Bearer " + accessToken)
+				.contentType(MediaType.MULTIPART_FORM_DATA).with(request -> {
 					request.setMethod("PUT");
 					return request;
 				}));
@@ -233,7 +233,7 @@ public class ProductControllerIT {
 
 		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.multipart("/products/{id}", existingId)
 				.file(photo).param("name", "Updated Product").param("quantity", "200").param("description", "descrição")
-				.param("critical_quantity", "20").param("unit_value", "39.99")
+				.param("critical_quantity", "20").param("unit_value", "39.99").param("categories", "1")
 				.header("Authorization", "Bearer " + accessToken).contentType(MediaType.MULTIPART_FORM_DATA)
 				.with(request -> {
 					request.setMethod("PUT");
