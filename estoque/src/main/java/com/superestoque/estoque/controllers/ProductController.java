@@ -91,7 +91,7 @@ public class ProductController {
 		return ResponseEntity.created(uri).body(entity);
 	}
 
-	@Operation(description = "Creates a new product with details including name, quantity, critical quantity, unit value, and photo.", summary = "Save a new product", responses = {
+	@Operation(description = "Update a product with details including name, quantity, critical quantity, unit value, and photo.", summary = "Save a new product", responses = {
 			@ApiResponse(description = "Created", responseCode = "201", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))),
 			@ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))),
 			@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Unauthorized\"}"))),

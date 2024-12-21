@@ -136,15 +136,13 @@ public class ProductService {
 		if (product.getName() == null || product.getName().isBlank()) {
 			throw new ValidMultiFormDataException("O campo nome é obrigatório.");
 		}
-		if (product.getName().length() < 4 || product.getName().length() > 60) {
-			throw new ValidMultiFormDataException("O campo nome deve conter entre 4 e 60 caracteres.");
-		}
+		
 		if (product.getQuantity() < 1) {
 			throw new ValidMultiFormDataException("O campo quantidade deve ser maior ou igual a um.");
 		}
 
-		if (product.getDescription().length() < 4 || product.getDescription().length() > 60) {
-			throw new ValidMultiFormDataException("O campo descrição deve conter entre 4 e 60 caracteres.");
+		if (product.getDescription().length() < 4) {
+			throw new ValidMultiFormDataException("O campo descrição deve conter entre no mínimo 4 caracteres.");
 		}
 
 		if (product.getPhoto() == null) {
