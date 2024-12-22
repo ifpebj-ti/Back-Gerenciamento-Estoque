@@ -20,6 +20,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -37,6 +38,9 @@ public class User implements Serializable, UserDetails {
 	private String password;
 	private boolean status;
 	private String email;
+	@Lob
+	private byte[] photo;
+	private boolean first_acess;
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
@@ -47,19 +51,23 @@ public class User implements Serializable, UserDetails {
 	public User() {
 	}
 
-	public User(Long id, String name, String email, String password) {
+	public User(Long id, String name, String email, byte[] photo, String password, boolean first_acess) {
 		this.id = id;
 		this.name = name;
 		this.status = true;
 		this.email = email;
+		this.photo = photo;
 		this.password = password;
+		this.first_acess = first_acess;
 	}
 
 	public User(UserDTO entity) {
 		this.id = entity.getId();
 		this.name = entity.getName();
 		this.email = entity.getEmail();
+		this.photo = entity.getPhoto();
 		this.status = entity.isStatus();
+		this.first_acess = entity.isFirst_acess();
 	}
 
 	public Long getId() {
@@ -94,6 +102,14 @@ public class User implements Serializable, UserDetails {
 		this.email = email;
 	}
 
+	public byte[] getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
+	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -112,6 +128,14 @@ public class User implements Serializable, UserDetails {
 
 	public Company getCompany() {
 		return company;
+	}
+
+	public boolean isFirst_acess() {
+		return first_acess;
+	}
+
+	public void setFirst_acess(boolean first_acess) {
+		this.first_acess = first_acess;
 	}
 
 	public boolean hasRole(String roleName) {

@@ -1,5 +1,7 @@
 package com.superestoque.estoque.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -19,12 +21,15 @@ import com.superestoque.estoque.entities.User;
 import com.superestoque.estoque.entities.dto.RoleDTO;
 import com.superestoque.estoque.entities.dto.UserDTO;
 import com.superestoque.estoque.entities.dto.UserInsertDTO;
+import com.superestoque.estoque.entities.dto.UserPhoto;
+import com.superestoque.estoque.entities.dto.UserUpdateDTO;
 import com.superestoque.estoque.entities.dto.UserUpdatePasswordDTO;
 import com.superestoque.estoque.factories.RoleFactory;
 import com.superestoque.estoque.factories.UserFactory;
 import com.superestoque.estoque.repositories.RoleRepository;
 import com.superestoque.estoque.repositories.UserRepository;
 import com.superestoque.estoque.services.exceptions.ResourceNotFoundException;
+import com.superestoque.estoque.services.exceptions.ValidMultiFormDataException;
 
 @ExtendWith(SpringExtension.class)
 public class UserServiceTests {
@@ -47,18 +52,22 @@ public class UserServiceTests {
 	private String nonExistingEmail;
 	private User entity;
 	private UserDTO entityDTO;
+	private Optional<User> userOpt;
 	private Role role;
+	private List<Long> roles = new ArrayList<>();
 
 	@BeforeEach
 	void setUp() throws Exception {
 		existingId = 1L;
 		nonExistingId = 1000L;
-		existingEmail = "alex.brown123@ifpe.com";
+		existingEmail = "alex.brown@ifpe.com";
 		nonExistingEmail = "joazinho.daagua@ifpe.com";
 		entity = UserFactory.createUser();
 		entityDTO = UserFactory.createUserDTO();
 		role = RoleFactory.createRole();
 		roleRepository.save(role);
+		roles.add(1L);
+		userOpt = Optional.of(entity);
 		Mockito.when(repository.save(ArgumentMatchers.any())).thenReturn(entity);
 		Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(entity));
 		Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
@@ -70,6 +79,8 @@ public class UserServiceTests {
 		Mockito.when(repository.save(ArgumentMatchers.any(User.class))).thenReturn(entity);
 		Mockito.when(authService.authenticated()).thenReturn(entity);
 		Mockito.when(roleRepository.findById(role.getId())).thenReturn(Optional.of(role));
+		Mockito.when(repository.getByEmail(existingEmail)).thenReturn(userOpt);
+		Mockito.when(repository.getByEmail(nonExistingEmail)).thenReturn(Optional.empty());
 	}
 
 	@Test
@@ -93,8 +104,8 @@ public class UserServiceTests {
 
 	@Test
 	public void saveUserShouldReturnUserDTO() {
-		UserDTO result = service.saveNewUser(
-				new UserInsertDTO(entityDTO.getId(), entity.getName(), entity.getEmail(), true, entity.getPassword()));
+		UserDTO result = service.saveNewUser(new UserInsertDTO(entityDTO.getId(), entity.getName(), entity.getEmail(),
+				entityDTO.getPhoto(), true, true, entity.getPassword()), roles);
 
 		Assertions.assertNotNull(result);
 		Assertions.assertEquals(entity.getName(), result.getName());
@@ -124,10 +135,10 @@ public class UserServiceTests {
 		UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO("newPassword123");
 
 		Assertions.assertDoesNotThrow(() -> {
-			service.updatePassword(existingId, dto);
+			service.updatePassword(existingEmail, dto);
 		});
 
-		Mockito.verify(repository, Mockito.times(1)).findById(existingId);
+		Mockito.verify(repository, Mockito.times(1)).getByEmail(existingEmail);
 	}
 
 	@Test
@@ -135,10 +146,10 @@ public class UserServiceTests {
 		UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO("newPassword123");
 
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-			service.updatePassword(nonExistingId, dto);
+			service.updatePassword(nonExistingEmail, dto);
 		});
 
-		Mockito.verify(repository, Mockito.times(1)).findById(nonExistingId);
+		Mockito.verify(repository, Mockito.times(1)).getByEmail(nonExistingEmail);
 		Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any(User.class));
 	}
 
@@ -176,10 +187,10 @@ public class UserServiceTests {
 
 	@Test
 	public void copyInsertDtoToEntityShouldCopyFieldsCorrectly() {
-		UserInsertDTO dto = new UserInsertDTO(null, "Test User", "test@test.com", true, "123456");
+		UserInsertDTO dto = new UserInsertDTO(null, "Test User", "test@test.com", null, true, true, "123456");
 		dto.getRoles().add(new RoleDTO(role.getId(), "ROLE_ADMIN"));
 
-		UserDTO user = service.saveNewUser(dto);
+		UserDTO user = service.saveNewUser(dto, roles);
 
 		Assertions.assertEquals(dto.getName(), user.getName());
 		Assertions.assertEquals(dto.getEmail(), user.getEmail());
@@ -198,9 +209,9 @@ public class UserServiceTests {
 	@Test
 	public void updatePasswordShouldEncodePasswordCorrectly() {
 		UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO("newPassword123");
-		service.updatePassword(existingId, dto);
+		service.updatePassword(existingEmail, dto);
 
-		Mockito.verify(repository, Mockito.times(1)).findById(existingId);
+		Mockito.verify(repository, Mockito.times(1)).getByEmail(existingEmail);
 		Mockito.verify(repository, Mockito.times(1)).save(ArgumentMatchers.any(User.class));
 	}
 
@@ -214,6 +225,81 @@ public class UserServiceTests {
 		Assertions.assertEquals(1, entity.getRoles().size());
 		Assertions.assertTrue(entity.getRoles().contains(existingRole));
 		Mockito.verify(repository, Mockito.times(1)).save(entity);
+	}
+
+	@Test
+	public void updateUserShouldUpdateUserWhenEmailExists() {
+		UserUpdateDTO updateDTO = new UserUpdateDTO("newpassword", new byte[] { 1, 2, 3 });
+
+		Assertions.assertDoesNotThrow(() -> {
+			service.updateUser(existingEmail, updateDTO);
+		});
+
+		Mockito.verify(repository, Mockito.times(1)).getByEmail(existingEmail);
+	}
+
+	@Test
+	public void updateUserShouldThrowResourceNotFoundExceptionWhenEmailDoesNotExist() {
+		UserUpdateDTO updateDTO = new UserUpdateDTO("newpassword", new byte[] { 1, 2, 3 });
+
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+			service.updateUser(nonExistingEmail, updateDTO);
+		});
+
+		Mockito.verify(repository, Mockito.times(1)).getByEmail(nonExistingEmail);
+		Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any(User.class));
+	}
+
+	@Test
+	public void updateUserShouldNotUpdatePhotoIfPhotoIsNull() {
+		UserUpdateDTO updateDTO = new UserUpdateDTO("newpassword", new byte[] { 1, 2, 3 });
+
+		service.updateUser(existingEmail, updateDTO);
+
+		Mockito.verify(repository, Mockito.times(1)).getByEmail(existingEmail);
+	}
+
+	@Test
+	public void getUserPhotoShouldReturnPhotoWhenEmailExists() {
+		UserPhoto photo = service.getUserPhoto(existingEmail);
+
+		Assertions.assertNotNull(photo);
+		Assertions.assertArrayEquals(entity.getPhoto(), photo.getPhoto());
+		Mockito.verify(repository, Mockito.times(1)).getByEmail(existingEmail);
+	}
+
+	@Test
+	public void getUserPhotoShouldThrowResourceNotFoundExceptionWhenEmailDoesNotExist() {
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+			service.getUserPhoto(nonExistingEmail);
+		});
+
+		Mockito.verify(repository, Mockito.times(1)).getByEmail(nonExistingEmail);
+	}
+
+	@Test
+	public void validUserShouldThrowExceptionWhenEmailAlreadyExists() {
+		Mockito.when(repository.getByEmail(existingEmail)).thenReturn(Optional.of(entity));
+
+		UserInsertDTO insertDTO = new UserInsertDTO(null, "Test User", existingEmail, null, true, true, "password123");
+
+		Assertions.assertThrows(ValidMultiFormDataException.class, () -> {
+			service.saveNewUser(insertDTO, roles);
+		});
+
+		Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any(User.class));
+	}
+
+	@Test
+	public void validUserShouldValidateFieldsCorrectly() {
+		UserInsertDTO validDTO = new UserInsertDTO(null, "Valid User", "valid@test.com", null, true, true,
+				"password123");
+
+		Assertions.assertDoesNotThrow(() -> {
+			service.saveNewUser(validDTO, roles);
+		});
+
+		Mockito.verify(repository, Mockito.times(1)).save(ArgumentMatchers.any(User.class));
 	}
 
 }

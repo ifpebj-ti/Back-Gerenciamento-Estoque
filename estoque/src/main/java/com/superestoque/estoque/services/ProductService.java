@@ -115,7 +115,9 @@ public class ProductService {
 	private void updateData(Product product, ProductDTO entity, List<Long> categories) {
 		validProduct(entity);
 		product.setName(entity.getName());
-		product.setPhoto(entity.getPhoto());
+		if (entity.getPhoto() != null && entity.getPhoto().length > 0) {
+			product.setPhoto(entity.getPhoto());
+		}
 		product.setQuantity(entity.getQuantity());
 		product.setDescription(entity.getDescription());
 		product.setUnitValue(entity.getUnitValue());
@@ -136,7 +138,7 @@ public class ProductService {
 		if (product.getName() == null || product.getName().isBlank()) {
 			throw new ValidMultiFormDataException("O campo nome é obrigatório.");
 		}
-		
+
 		if (product.getQuantity() < 1) {
 			throw new ValidMultiFormDataException("O campo quantidade deve ser maior ou igual a um.");
 		}
@@ -145,9 +147,6 @@ public class ProductService {
 			throw new ValidMultiFormDataException("O campo descrição deve conter entre no mínimo 4 caracteres.");
 		}
 
-		if (product.getPhoto() == null) {
-			throw new ValidMultiFormDataException("O campo foto é obrigatório.");
-		}
 		if (product.getCritical_quantity() < 1) {
 			throw new ValidMultiFormDataException("O campo quantidade crítica deve ser maior ou igual a um.");
 		}

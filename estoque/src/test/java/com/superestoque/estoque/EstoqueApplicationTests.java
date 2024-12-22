@@ -10,4 +10,8 @@ class EstoqueApplicationTests {
 	void contextLoads() {
 	}
 
+	@Test
+	void mainMethodTest() {
+		EstoqueApplication.main(new String[] {});
+	}
 }

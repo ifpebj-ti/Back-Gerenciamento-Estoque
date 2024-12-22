@@ -1,5 +1,6 @@
 package com.superestoque.estoque.services;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -178,4 +179,58 @@ public class ProductServiceTests {
 		Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any(Product.class));
 	}
 
+	@Test
+	public void validProductShouldThrowExceptionWhenQuantityIsInvalid() {
+		ProductDTO invalidDTO = ProductFactory.createProductDTO(company);
+		invalidDTO.setQuantity(0);
+
+		Assertions.assertThrows(ValidMultiFormDataException.class, () -> {
+			service.saveNewProduct(invalidDTO, categories);
+		});
+
+		Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any(Product.class));
+	}
+
+	@Test
+	public void validProductShouldThrowExceptionWhenUnitValueIsInvalid() {
+		ProductDTO invalidDTO = ProductFactory.createProductDTO(company);
+		invalidDTO.setUnitValue(BigDecimal.valueOf(0));
+
+		Assertions.assertThrows(ValidMultiFormDataException.class, () -> {
+			service.saveNewProduct(invalidDTO, categories);
+		});
+
+		Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any(Product.class));
+	}
+
+	@Test
+	public void copyInsertDtoToEntityShouldThrowExceptionWhenCategoriesAreEmpty() {
+		List<Long> emptyCategories = new ArrayList<>();
+
+		Assertions.assertThrows(ValidMultiFormDataException.class, () -> {
+			service.saveNewProduct(productDTO, emptyCategories);
+		});
+
+		Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any(Product.class));
+	}
+
+	@Test
+	public void copyInsertDtoToEntityShouldSetFieldsCorrectly() {
+		service.saveNewProduct(productDTO, categories);
+
+		Mockito.verify(repository, Mockito.times(1))
+				.save(Mockito.argThat(product -> product.getName().equals(productDTO.getName())
+						&& product.getQuantity() == productDTO.getQuantity()
+						&& product.getCategories().size() == categories.size()));
+	}
+
+	@Test
+	public void updateDataShouldHandleNullPhoto() {
+		ProductDTO updatedDTO = ProductFactory.createProductDTO(company);
+		updatedDTO.setPhoto(null);
+
+		service.updateProduct(existingId, updatedDTO, categories);
+
+		Mockito.verify(repository, Mockito.times(1)).save(Mockito.argThat(product -> product.getPhoto() == null));
+	}
 }

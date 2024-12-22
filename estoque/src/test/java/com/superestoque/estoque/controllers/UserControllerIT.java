@@ -1,6 +1,7 @@
 package com.superestoque.estoque.controllers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -51,7 +53,7 @@ public class UserControllerIT {
 		password = "123456";
 		existingId = 1L;
 		nonExistingId = 1000L;
-		userInsert = new UserInsertDTO(5L, "Usuário teste", "teste@ifpe.com", true, "123456789");
+		userInsert = new UserInsertDTO(5L, "Usuário teste", "teste@ifpe.com", null, true, false, "123456789");
 		userInsert.getRoles().add(new RoleDTO(2L, "ROLE_OPERATOR"));
 	}
 
@@ -87,27 +89,36 @@ public class UserControllerIT {
 
 	@Test
 	public void saveNewUserShouldReturnUnprocessableEntityWhenInvalidData() throws Exception {
-		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
-		
-		userInsert = new UserInsertDTO(78L, "Usuário teste", "", true, "123456789");
+	    String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
-		String jsonBody = objectMapper.writeValueAsString(userInsert);
+	    MockMultipartFile photo = new MockMultipartFile("photo", "test.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[0]);
 
-		ResultActions result = mockMvc.perform(post("/users").header("Authorization", "Bearer " + accessToken)
-				.contentType(MediaType.APPLICATION_JSON).content(jsonBody));
+	    ResultActions result = mockMvc.perform(multipart("/users")
+	            .file(photo)
+	            .param("name", "")
+	            .param("email", "invalid_email")
+	            .param("password", "short")
+	            .param("roles", "1", "2")
+	            .header("Authorization", "Bearer " + accessToken)
+	            .contentType(MediaType.MULTIPART_FORM_DATA));
 
-		result.andExpect(status().isUnprocessableEntity());
-		result.andExpect(jsonPath("$.errors").isArray());
+	    result.andExpect(status().isUnprocessableEntity());
 	}
 
 	@Test
 	public void saveNewUserShouldReturnForbiddenWhenOperatorAuthenticated() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
-		String jsonBody = objectMapper.writeValueAsString(userInsert);
+	    MockMultipartFile photo = new MockMultipartFile("photo", "test.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[0]);
 
-		ResultActions result = mockMvc.perform(post("/users").header("Authorization", "Bearer " + accessToken)
-				.contentType(MediaType.APPLICATION_JSON).content(jsonBody));
+	    ResultActions result = mockMvc.perform(multipart("/users")
+	            .file(photo)
+	            .param("name", "")
+	            .param("email", "invalid_email")
+	            .param("password", "short")
+	            .param("roles", "1", "2")
+	            .header("Authorization", "Bearer " + accessToken)
+	            .contentType(MediaType.MULTIPART_FORM_DATA));
 
 		result.andExpect(status().isForbidden());
 	}
@@ -152,7 +163,7 @@ public class UserControllerIT {
 		String jsonBody = objectMapper.writeValueAsString(updatePasswordDTO);
 
 		ResultActions result = mockMvc
-				.perform(put("/users/updatePassword/{id}", existingId).header("Authorization", "Bearer " + accessToken)
+				.perform(put("/users/updatePassword/{email}", adminUsername).header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON).content(jsonBody));
 
 		result.andExpect(status().isNoContent());

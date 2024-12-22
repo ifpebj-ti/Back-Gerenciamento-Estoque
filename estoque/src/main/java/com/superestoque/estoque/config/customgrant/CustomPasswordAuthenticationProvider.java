@@ -39,7 +39,7 @@ import com.superestoque.estoque.entities.User;
 import com.superestoque.estoque.repositories.UserRepository;
 
 public class CustomPasswordAuthenticationProvider implements AuthenticationProvider {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger(CustomPasswordAuthenticationProvider.class);
 
 	private static final String ERROR_URI = "https://datatracker.ietf.org/doc/html/rfc6749#section-5.2";
@@ -82,19 +82,19 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 		try {
 			user = userDetailsService.loadUserByUsername(username);
 		} catch (UsernameNotFoundException e) {
-			LOG.error("Erro no login do usuário "+ username +" usuário e/ou senha inválido");
+			LOG.error("Erro no login do usuário " + username + " usuário não encontrado");
 			throw new OAuth2AuthenticationException("Usuário e/ou senha inválido");
 		}
 
 		if (!passwordEncoder.matches(password, user.getPassword()) || !user.getUsername().equals(username)) {
-			LOG.error("Erro no login do usuário "+ user.getUsername() +" usuário e/ou senha inválido");
+			LOG.error("Erro no login do usuário " + user.getUsername() + " senha inválido");
 			throw new OAuth2AuthenticationException("Usuário e/ou senha inválido");
 		}
 
 		User entity = userRepository.findByEmail(user.getUsername());
 
 		if (!entity.isStatus()) {
-			LOG.error("Erro no login do usuário "+ username +" desativado");
+			LOG.error("Erro no login do usuário " + username + " desativado");
 			throw new OAuth2AuthenticationException("Usuário não encontrado");
 		}
 
@@ -105,7 +105,7 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 		OAuth2ClientAuthenticationToken oAuth2ClientAuthenticationToken = (OAuth2ClientAuthenticationToken) SecurityContextHolder
 				.getContext().getAuthentication();
 		CustomUserAuthorities customPasswordUser = new CustomUserAuthorities(username, user.getAuthorities(),
-				entity.getName());
+				entity.getName(), entity.isFirst_acess());
 		oAuth2ClientAuthenticationToken.setDetails(customPasswordUser);
 
 		var newcontext = SecurityContextHolder.createEmptyContext();
@@ -145,7 +145,7 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 
 		OAuth2Authorization authorization = authorizationBuilder.build();
 		this.authorizationService.save(authorization);
-		LOG.info("Usuário "+ username +" logado com sucesso");
+		LOG.info("Usuário " + username + " logado com sucesso");
 		return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal, accessToken);
 	}
 
