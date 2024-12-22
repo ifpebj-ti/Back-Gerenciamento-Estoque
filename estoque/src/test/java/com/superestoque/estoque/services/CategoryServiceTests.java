@@ -1,6 +1,7 @@
 package com.superestoque.estoque.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +38,8 @@ public class CategoryServiceTests {
 	@Mock
 	private CategoryRepository repository;
 
+	private Long existingId;
+	private Long nonExistingId;
 	private Company company;
 	private User user;
 	private Category category;
@@ -44,6 +47,8 @@ public class CategoryServiceTests {
 
 	@BeforeEach
 	void setUp() throws Exception {
+		existingId = 1L;
+		nonExistingId = 1000L;
 		user = UserFactory.createUser();
 		company = CompanyFactory.createCompany();
 		category = CategoryFactory.createCategory();
@@ -52,9 +57,29 @@ public class CategoryServiceTests {
 
 		Mockito.when(authService.authenticated()).thenReturn(user);
 		Mockito.when(companyService.findById()).thenReturn(new CompanyDTO(company));
+		Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(category));
+		Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
 		Mockito.when(repository.findByCompanyId(company.getId())).thenReturn(List.of(category));
 		Mockito.when(repository.save(Mockito.any())).thenReturn(category);
 		Mockito.when(repository.existsById(category.getId())).thenReturn(true);
+	}
+
+	@Test
+	public void findByIdShouldReturnProductWhenIdExists() {
+		CategoryDTO result = service.findById(existingId);
+
+		Assertions.assertNotNull(result);
+		Assertions.assertEquals(category.getName(), result.getName());
+		Mockito.verify(repository, Mockito.times(1)).findById(existingId);
+	}
+
+	@Test
+	public void findByIdShouldThrowResourceNotFoundExceptionWhenDoesNotExist() {
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+			service.findById(nonExistingId);
+		});
+
+		Mockito.verify(repository, Mockito.times(1)).findById(nonExistingId);
 	}
 
 	@Test

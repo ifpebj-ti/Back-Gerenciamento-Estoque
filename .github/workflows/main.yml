@@ -79,9 +79,7 @@ jobs:
 
     - name: Remove Old Badge
       run: |
-        if grep -q "![Cobertura de Testes](.github/badges/coverage-badge.svg)" README.md; then
-          sed -i "/!\[Cobertura de Testes\](.github\/badges\/coverage-badge\.svg)/d" README.md
-        fi
+        sed -i.bak '/!\[Cobertura de Testes\](.github\/badges\/coverage-badge\.svg)/d' README.md
 
     - name: Commit Removal of Old Badge
       uses: stefanzweifel/git-auto-commit-action@v4

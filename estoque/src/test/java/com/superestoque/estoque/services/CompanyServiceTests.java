@@ -47,6 +47,7 @@ public class CompanyServiceTests {
 		nonExistingCompanyId = 1000L;
 		company = CompanyFactory.createCompany();
 		user = UserFactory.createUser();
+		user.setCompany(company);
 		validPhoto = new MockMultipartFile("photo", "test.jpg", "image/jpeg", "photo content".getBytes());
 		invalidPhoto = new MockMultipartFile("photo", "test.txt", "text/plain", "invalid content".getBytes());
 
@@ -88,9 +89,30 @@ public class CompanyServiceTests {
 	@Test
 	public void findAllUserByCompanyShouldThrowResourceNotFoundExceptionWhenCompanyDoesNotExist() {
 
-		Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
 			service.findAllUserByCompany();
 		});
-
 	}
+
+	@Test
+	public void findByIdShouldThrowResourceNotFoundExceptionWhenCompanyDoesNotExist() {
+		Mockito.when(repository.findById(user.getCompany().getId())).thenReturn(Optional.empty());
+
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+			service.findById();
+		});
+
+		Mockito.verify(repository, Mockito.times(1)).findById(user.getCompany().getId());
+	}
+
+	@Test
+	public void updateDataShouldHandleIOException() throws IOException {
+		MockMultipartFile invalidPhoto = Mockito.mock(MockMultipartFile.class);
+		Mockito.when(invalidPhoto.getBytes()).thenThrow(IOException.class);
+
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			service.updateDataByUser(existingCompanyId, "Company Name", invalidPhoto);
+		});
+	}
+
 }

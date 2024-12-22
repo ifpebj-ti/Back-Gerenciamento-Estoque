@@ -6,7 +6,7 @@ import com.superestoque.estoque.entities.dto.UserDTO;
 public class UserFactory {
 
 	public static User createUser() {
-		return new User(50L, "Capitão América", "Capitão@vingadores.com", "FAZOL123");
+		return new User(50L, "Capitão América", "Capitão@vingadores.com", null, "FAZOL123", true);
 	}
 
 	public static UserDTO createUserDTO() {
