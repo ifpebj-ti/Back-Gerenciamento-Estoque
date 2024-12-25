@@ -41,6 +41,9 @@ public class ProductService {
 	@Autowired
 	private CategoryService categoryService;
 
+	@Autowired
+	private EmailService emailService;
+
 	@Transactional
 	public Page<ProductDTO> findAllProductByCompanyIdPaged(Pageable pageable, Long categoryId) {
 		User user = authService.authenticated();
@@ -123,15 +126,15 @@ public class ProductService {
 		product.setUnitValue(entity.getUnitValue());
 		product.setCritical_quantity(entity.getCritical_quantity());
 		product.getCategories().clear();
-		if (categories.size() < 1) {
+		if (categories.isEmpty()) {
 			throw new ValidMultiFormDataException("O produto deve conter ao menos uma categoria.");
-		} else {
-			for (Long id : categories) {
-				CategoryDTO category = categoryService.findById(id);
-				product.getCategories().add(new Category(category));
-			}
+		}
+		for (Long id : categories) {
+			CategoryDTO category = categoryService.findById(id);
+			product.getCategories().add(new Category(category));
 		}
 		product.calculateStockValue();
+		checkQuantity(product);
 	}
 
 	private void validProduct(ProductDTO product) {
@@ -155,6 +158,12 @@ public class ProductService {
 		}
 		if (product.getStockValue() != null && product.getStockValue().compareTo(BigDecimal.ZERO) < 1) {
 			throw new ValidMultiFormDataException("O valor do estoque deve ser maior ou igual a um.");
+		}
+	}
+
+	private void checkQuantity(Product product) {
+		if (product.getQuantity() <= product.getCritical_quantity()) {
+			emailService.sendEmailProduct(product);
 		}
 	}
 }
