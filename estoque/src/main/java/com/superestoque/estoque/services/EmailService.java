@@ -155,4 +155,32 @@ public class EmailService {
 			LOG.error("Erro ao tentar enviar email {}", e.getLocalizedMessage());
 		}
 	}
+
+	@Async("taskExecutor")
+	public void sendPasswordResetEmail(User user, String token) {
+		try {
+			String resetLink = "http://localhost:3000/reset-password?token=" + token;
+
+			String htmlContent = """
+					    <p>Olá, %s!</p>
+					    <p>Recebemos um pedido para redefinir sua senha.</p>
+					    <p>Se você não solicitou essa alteração, por favor ignore este e-mail.</p>
+					    <p>Caso contrário, clique no link abaixo para redefinir sua senha:</p>
+					    <a href="%s">Redefinir Senha</a>
+					    <p>Este link expira em 15 minutos.</p>
+					""".formatted(user.getName(), resetLink);
+
+			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+			helper.setTo(user.getEmail());
+			helper.setSubject("Redefinição de Senha");
+			helper.setText(htmlContent, true);
+
+			javaMailSender.send(mimeMessage);
+			LOG.info("E-mail de redefinição de senha enviado para {}", user.getEmail());
+		} catch (Exception e) {
+			LOG.error("Erro ao enviar e-mail de redefinição de senha", e);
+		}
+	}
+
 }

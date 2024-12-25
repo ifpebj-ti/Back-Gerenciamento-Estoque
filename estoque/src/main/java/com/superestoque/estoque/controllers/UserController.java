@@ -133,4 +133,48 @@ public class UserController {
 		return ResponseEntity.ok(entity);
 	}
 
+	@Operation(description = "This endpoint is used to request a password reset. An email with a reset link will be sent to the user.", summary = "Request password reset", responses = {
+			@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+			@ApiResponse(description = "Not Found", responseCode = "404", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = """
+					    {
+					        "timestamp": "2024-02-04T12:00:00Z",
+					        "status": 404,
+					        "error": "Recurso não encontrado",
+					        "message": "Usuário não encontrado",
+					        "path": "/users/reset-password"
+					    }
+					"""), schema = @Schema(implementation = StandardError.class))),
+			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = """
+					    {
+					        "message": "Invalid email format"
+					    }
+					"""))) })
+	@PostMapping("/reset-password")
+	public ResponseEntity<Void> requestPasswordReset(@RequestParam String email) {
+		service.generatePasswordResetToken(email);
+		return ResponseEntity.noContent().build();
+	}
+
+	@Operation(description = "This endpoint is used to reset a user's password. The user must provide a valid token and a new password.", summary = "Reset password with token", responses = {
+			@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+			@ApiResponse(description = "Not Found", responseCode = "404", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = """
+					    {
+					        "timestamp": "2024-02-04T12:00:00Z",
+					        "status": 404,
+					        "error": "Recurso não encontrado",
+					        "message": "Token inválido ou não encontrado",
+					        "path": "/users/reset-password"
+					    }
+					"""), schema = @Schema(implementation = StandardError.class))),
+			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = """
+					    {
+					        "message": "Token expirado"
+					    }
+					"""))) })
+	@PutMapping("/reset-password")
+	public ResponseEntity<Void> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+		service.updatePasswordWithToken(token, newPassword);
+		return ResponseEntity.noContent().build();
+	}
+
 }
