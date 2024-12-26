@@ -1,7 +1,9 @@
 package com.superestoque.estoque.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.superestoque.estoque.entities.PasswordResetToken;
 import com.superestoque.estoque.entities.Role;
 import com.superestoque.estoque.entities.User;
 import com.superestoque.estoque.entities.dto.UserDTO;
@@ -21,6 +24,7 @@ import com.superestoque.estoque.entities.dto.UserInsertDTO;
 import com.superestoque.estoque.entities.dto.UserPhoto;
 import com.superestoque.estoque.entities.dto.UserUpdateDTO;
 import com.superestoque.estoque.entities.dto.UserUpdatePasswordDTO;
+import com.superestoque.estoque.repositories.PasswordResetTokenRepository;
 import com.superestoque.estoque.repositories.RoleRepository;
 import com.superestoque.estoque.repositories.UserRepository;
 import com.superestoque.estoque.services.exceptions.ResourceNotFoundException;
@@ -41,6 +45,12 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private AuthService authService;
+
+	@Autowired
+	private PasswordResetTokenRepository passwordResetTokenRepository;
+
+	@Autowired
+	private EmailService emailService;
 
 	@Transactional
 	public UserDTO findUserById() {
@@ -118,6 +128,42 @@ public class UserService implements UserDetailsService {
 		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 		UserPhoto entity = new UserPhoto(user.getPhoto());
 		return entity;
+	}
+
+	@Transactional
+	public void generatePasswordResetToken(String email) {
+		User user = repository.getByEmail(email)
+				.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+
+		passwordResetTokenRepository.deleteByUser(user);
+
+		String token = UUID.randomUUID().toString();
+		PasswordResetToken passwordResetToken = new PasswordResetToken();
+		passwordResetToken.setToken(token);
+		passwordResetToken.setExpiryDate(LocalDateTime.now().plusMinutes(15));
+		passwordResetToken.setUser(user);
+
+		passwordResetTokenRepository.save(passwordResetToken);
+
+		emailService.sendPasswordResetEmail(user, token);
+	}
+
+	@Transactional
+	public void updatePasswordWithToken(String token, String newPassword) {
+		PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token)
+				.orElseThrow(() -> new ResourceNotFoundException("Token inválido."));
+
+		if (passwordResetToken.isExpired()) {
+			throw new ValidMultiFormDataException("Token expirado.");
+		}
+
+		User user = passwordResetToken.getUser();
+		user.setPassword(passwordEncoder.encode(newPassword));
+		repository.save(user);
+
+		passwordResetTokenRepository.delete(passwordResetToken);
+
+		LOG.info("Senha atualizada para o usuário {}", user.getEmail());
 	}
 
 	private void copyInsertDtoToEntity(User user, UserInsertDTO dto, List<Long> roles) {
