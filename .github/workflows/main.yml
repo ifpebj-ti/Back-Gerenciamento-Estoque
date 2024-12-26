@@ -109,7 +109,12 @@ jobs:
     runs-on: self-hosted
     steps:
 
-    - name: Pull image from docker hub
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+
+    - name: Pull image from Docker Hub
       run: docker pull brazf/estoque:latest
 
     - name: Create .env file
@@ -124,10 +129,8 @@ jobs:
         echo "CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}" >> .env
         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
 
-    - name: Stop and remove existing containers
-      run: |
-        docker-compose down || true
+    - name: Stop and Remove Existing Containers
+      run: docker-compose down || true
 
-    - name: Deploy application with docker-compose
-      run: |
-        docker-compose up -d
+    - name: Deploy Application with docker-compose
+      run: docker-compose up -d
