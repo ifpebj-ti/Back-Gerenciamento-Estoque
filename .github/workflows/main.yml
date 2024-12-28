@@ -20,6 +20,18 @@ jobs:
         distribution: 'zulu'
         java-version: '17'
 
+    - name: Run Checkstyle Lint
+      run: |
+        cd estoque
+        mvn checkstyle:checkstyle
+      continue-on-error: false
+
+    - name: Upload Checkstyle Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: checkstyle-report
+        path: estoque/target/site/checkstyle.html    
+
     - name: build
       run: |
           cd estoque
