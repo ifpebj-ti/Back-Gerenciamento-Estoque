@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +34,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 @RequestMapping(value = "/products")
 public class ProductController {
 
-	@Autowired
-	private ProductService service;
+	private final ProductService service;
+
+	public ProductController(ProductService service) {
+		this.service = service;
+	}
 
 	@Operation(description = "Retrieves a paginated list of products by group", summary = "Fetches products with pagination by group", responses = {
 			@ApiResponse(description = "Ok", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))),

@@ -13,7 +13,7 @@ import com.superestoque.estoque.entities.User;
 import com.superestoque.estoque.factories.CompanyFactory;
 
 @DataJpaTest
-public class CompanyRepositoryTests {
+class CompanyRepositoryTests {
 
 	@Autowired
 	private CompanyRepository repository;
@@ -31,7 +31,7 @@ public class CompanyRepositoryTests {
 	}
 
 	@Test
-	public void saveShouldPersistCompany() {
+	void saveShouldPersistCompany() {
 		company = repository.save(company);
 
 		Assertions.assertNotNull(company.getId());
@@ -40,21 +40,21 @@ public class CompanyRepositoryTests {
 	}
 
 	@Test
-	public void findByIdShouldReturnNonNullWhenIdExists() {
+	void findByIdShouldReturnNonNullWhenIdExists() {
 		Optional<Company> result = repository.findById(existingId);
 
 		Assertions.assertTrue(result.isPresent());
 	}
 
 	@Test
-	public void findByIdShouldReturnEmptyWhenIdNonExists() {
+	void findByIdShouldReturnEmptyWhenIdNonExists() {
 		Optional<Company> result = repository.findById(nonExistingId);
 
 		Assertions.assertTrue(result.isEmpty());
 	}
 
 	@Test
-	public void deleteByIdShouldDeleteObjectWhenIdExists() {
+	void deleteByIdShouldDeleteObjectWhenIdExists() {
 		repository.deleteById(existingId);
 		Optional<Company> result = repository.findById(existingId);
 
@@ -62,7 +62,7 @@ public class CompanyRepositoryTests {
 	}
 
 	@Test
-	public void deleteByIdShouldDoNothingWhenIdNonExists() {
+	void deleteByIdShouldDoNothingWhenIdNonExists() {
 		repository.deleteById(nonExistingId);
 
 		Optional<Company> result = repository.findById(nonExistingId);
@@ -70,7 +70,7 @@ public class CompanyRepositoryTests {
 	}
 
 	@Test
-	public void saveShouldPersistCompanyWithUsers() {
+	void saveShouldPersistCompanyWithUsers() {
 		User user = new User();
 		user.setName("Test User");
 		company.getUsers().add(user);
@@ -81,7 +81,7 @@ public class CompanyRepositoryTests {
 	}
 
 	@Test
-	public void saveShouldUpdateCompanyName() {
+	void saveShouldUpdateCompanyName() {
 		company = repository.getReferenceById(existingId);
 		company.setName("Empresa Atualizada");
 

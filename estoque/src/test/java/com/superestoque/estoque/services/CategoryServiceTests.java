@@ -24,7 +24,7 @@ import com.superestoque.estoque.repositories.CategoryRepository;
 import com.superestoque.estoque.services.exceptions.ResourceNotFoundException;
 
 @ExtendWith(SpringExtension.class)
-public class CategoryServiceTests {
+class CategoryServiceTests {
 
 	@InjectMocks
 	private CategoryService service;
@@ -65,7 +65,7 @@ public class CategoryServiceTests {
 	}
 
 	@Test
-	public void findByIdShouldReturnProductWhenIdExists() {
+	void findByIdShouldReturnProductWhenIdExists() {
 		CategoryDTO result = service.findById(existingId);
 
 		Assertions.assertNotNull(result);
@@ -74,7 +74,7 @@ public class CategoryServiceTests {
 	}
 
 	@Test
-	public void findByIdShouldThrowResourceNotFoundExceptionWhenDoesNotExist() {
+	void findByIdShouldThrowResourceNotFoundExceptionWhenDoesNotExist() {
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
 			service.findById(nonExistingId);
 		});
@@ -83,7 +83,7 @@ public class CategoryServiceTests {
 	}
 
 	@Test
-	public void findAllCategoryShouldReturnListOfCategoriesWhenUserIsAuthenticated() {
+	void findAllCategoryShouldReturnListOfCategoriesWhenUserIsAuthenticated() {
 		List<CategoryDTO> result = service.findAllCategory();
 
 		Assertions.assertNotNull(result);
@@ -94,7 +94,7 @@ public class CategoryServiceTests {
 	}
 
 	@Test
-	public void deleteShouldRemoveCategoryWhenIdExists() {
+	void deleteShouldRemoveCategoryWhenIdExists() {
 		service.delete(category.getId());
 
 		Mockito.verify(repository, Mockito.times(1)).existsById(category.getId());
@@ -102,7 +102,7 @@ public class CategoryServiceTests {
 	}
 
 	@Test
-	public void insertShouldPersistCategoryAndReturnCategoryDTO() {
+	void insertShouldPersistCategoryAndReturnCategoryDTO() {
 		CategoryDTO result = service.insert(categoryDTO);
 
 		Assertions.assertNotNull(result);
@@ -111,7 +111,7 @@ public class CategoryServiceTests {
 	}
 
 	@Test
-	public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+	void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
 		Mockito.when(repository.existsById(category.getId())).thenReturn(false);
 
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {

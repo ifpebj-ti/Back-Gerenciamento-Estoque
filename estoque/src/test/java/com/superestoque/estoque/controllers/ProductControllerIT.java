@@ -23,7 +23,7 @@ import jakarta.transaction.Transactional;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class ProductControllerIT {
+class ProductControllerIT {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -47,7 +47,7 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void findAllProductsPagedByGroupShouldReturnPageWhenAuthenticatedAsAdmin() throws Exception {
+	void findAllProductsPagedByGroupShouldReturnPageWhenAuthenticatedAsAdmin() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		ResultActions result = mockMvc.perform(get("/products").header("Authorization", "Bearer " + accessToken)
@@ -58,14 +58,14 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void findAllProductsPagedByGroupShouldReturnUnauthorizedWhenNoTokenGiven() throws Exception {
+	void findAllProductsPagedByGroupShouldReturnUnauthorizedWhenNoTokenGiven() throws Exception {
 		ResultActions result = mockMvc.perform(get("/products").contentType(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	public void findAllProductsPagedByGroupShouldReturnPageWhenAuthenticatedAsOperator() throws Exception {
+	void findAllProductsPagedByGroupShouldReturnPageWhenAuthenticatedAsOperator() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
 		ResultActions result = mockMvc.perform(get("/products").header("Authorization", "Bearer " + accessToken)
@@ -76,7 +76,7 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void findByIdShouldReturnProductWhenIdExists() throws Exception {
+	void findByIdShouldReturnProductWhenIdExists() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		ResultActions result = mockMvc.perform(get("/products/{id}", existingId)
@@ -87,7 +87,7 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+	void findByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		ResultActions result = mockMvc.perform(get("/products/{id}", nonExistingId)
@@ -97,7 +97,7 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void findByIdShouldReturnProductWhenIdExistsAndAuthenticatedAsOperator() throws Exception {
+	void findByIdShouldReturnProductWhenIdExistsAndAuthenticatedAsOperator() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
 		ResultActions result = mockMvc.perform(get("/products/{id}", existingId)
@@ -108,7 +108,7 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void deleteByIdShouldReturnNoContentWhenIdExists() throws Exception {
+	void deleteByIdShouldReturnNoContentWhenIdExists() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		ResultActions result = mockMvc.perform(delete("/products/{id}", existingId)
@@ -118,7 +118,7 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void deleteByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+	void deleteByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		ResultActions result = mockMvc.perform(delete("/products/{id}", nonExistingId)
@@ -128,7 +128,7 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void deleteByIdShouldReturnForbiddenWhenAuthenticatedAsOperator() throws Exception {
+	void deleteByIdShouldReturnForbiddenWhenAuthenticatedAsOperator() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
 		ResultActions result = mockMvc.perform(delete("/products/{id}", existingId)
@@ -138,7 +138,7 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void saveNewProductShouldCreateProductWhenValidData() throws Exception {
+	void saveNewProductShouldCreateProductWhenValidData() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		MockMultipartFile photo = new MockMultipartFile("photo", "photo.jpg", "image/jpeg",
@@ -155,7 +155,7 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void saveNewProductShouldReturnUnprocessableEntityWhenInvalidData() throws Exception {
+	void saveNewProductShouldReturnUnprocessableEntityWhenInvalidData() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		MockMultipartFile photo = new MockMultipartFile("photo", "photo.jpg", "image/jpeg",
@@ -170,7 +170,7 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void saveNewProductShouldReturnForbiddenWhenAuthenticatedAsOperator() throws Exception {
+	void saveNewProductShouldReturnForbiddenWhenAuthenticatedAsOperator() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
 		MockMultipartFile photo = new MockMultipartFile("photo", "photo.jpg", "image/jpeg",
@@ -185,7 +185,7 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void updateProductShouldUpdateProductWhenValidData() throws Exception {
+	void updateProductShouldUpdateProductWhenValidData() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		MockMultipartFile photo = new MockMultipartFile("photo", "photo.jpg", "image/jpeg",
@@ -206,7 +206,7 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void updateProductShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+	void updateProductShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		MockMultipartFile photo = new MockMultipartFile("photo", "photo.jpg", "image/jpeg",
@@ -225,7 +225,7 @@ public class ProductControllerIT {
 	}
 
 	@Test
-	public void updateProductShouldReturnForbiddenWhenAuthenticatedAsOperator() throws Exception {
+	void updateProductShouldReturnForbiddenWhenAuthenticatedAsOperator() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
 		MockMultipartFile photo = new MockMultipartFile("photo", "photo.jpg", "image/jpeg",

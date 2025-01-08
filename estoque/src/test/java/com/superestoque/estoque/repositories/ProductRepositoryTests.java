@@ -14,7 +14,7 @@ import com.superestoque.estoque.entities.Product;
 import com.superestoque.estoque.factories.ProductFactory;
 
 @DataJpaTest
-public class ProductRepositoryTests {
+class ProductRepositoryTests {
 
 	@Autowired
 	private ProductRepository repository;
@@ -37,7 +37,7 @@ public class ProductRepositoryTests {
 	}
 
 	@Test
-	public void saveShouldPersistProduct() {
+	void saveShouldPersistProduct() {
 		product = repository.save(product);
 
 		Assertions.assertNotNull(product.getId());
@@ -46,21 +46,21 @@ public class ProductRepositoryTests {
 	}
 
 	@Test
-	public void findByIdShouldReturnNonNullWhenIdExists() {
+	void findByIdShouldReturnNonNullWhenIdExists() {
 		Optional<Product> result = repository.findById(existingId);
 
 		Assertions.assertTrue(result.isPresent());
 	}
 
 	@Test
-	public void findByIdShouldReturnEmptyWhenIdNonExists() {
+	void findByIdShouldReturnEmptyWhenIdNonExists() {
 		Optional<Product> result = repository.findById(nonExistingId);
 
 		Assertions.assertTrue(result.isEmpty());
 	}
 
 	@Test
-	public void deleteByIdShouldDeleteObjectWhenIdExists() {
+	void deleteByIdShouldDeleteObjectWhenIdExists() {
 		repository.deleteById(existingId);
 		Optional<Product> result = repository.findById(existingId);
 
@@ -68,7 +68,7 @@ public class ProductRepositoryTests {
 	}
 
 	@Test
-	public void deleteByIdShouldDoNothingWhenIdNonExists() {
+	void deleteByIdShouldDoNothingWhenIdNonExists() {
 		repository.deleteById(nonExistingId);
 
 		Optional<Product> result = repository.findById(nonExistingId);
@@ -76,7 +76,7 @@ public class ProductRepositoryTests {
 	}
 
 	@Test
-	public void saveShouldUpdateProductQuantity() {
+	void saveShouldUpdateProductQuantity() {
 		product = repository.getReferenceById(existingId);
 		product.setQuantity(20);
 
@@ -86,7 +86,7 @@ public class ProductRepositoryTests {
 	}
 
 	@Test
-	public void saveShouldCalculateStockValueCorrectly() {
+	void saveShouldCalculateStockValueCorrectly() {
 		product.setQuantity(5);
 		product.setUnitValue(new BigDecimal("100.00"));
 		product.calculateStockValue();
@@ -97,7 +97,7 @@ public class ProductRepositoryTests {
 	}
 
 	@Test
-	public void saveShouldPersistProductWithCompany() {
+	void saveShouldPersistProductWithCompany() {
 		product.setCompany(company);
 
 		product = repository.save(product);
@@ -107,7 +107,7 @@ public class ProductRepositoryTests {
 	}
 
 	@Test
-	public void calculateStockValueShouldReturnTotalStockValue() {
+	void calculateStockValueShouldReturnTotalStockValue() {
 		product.calculateStockValue();
 
 		Assertions.assertEquals(BigDecimal.valueOf(100), product.getStockValue());

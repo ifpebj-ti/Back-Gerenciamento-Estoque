@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.superestoque.estoque.entities.Category;
@@ -24,14 +23,17 @@ public class CategoryService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CategoryService.class);
 
-	@Autowired
-	private CategoryRepository repository;
+	private final CategoryRepository repository;
 
-	@Autowired
-	private AuthService authService;
+	private final AuthService authService;
 
-	@Autowired
-	private CompanyService companyService;
+	private final CompanyService companyService;
+
+	public CategoryService(CategoryRepository repository, AuthService authService, CompanyService companyService) {
+		this.repository = repository;
+		this.authService = authService;
+		this.companyService = companyService;
+	}
 
 	@Transactional
 	public List<CategoryDTO> findAllCategory() {
@@ -41,12 +43,12 @@ public class CategoryService {
 				.collect(Collectors.toList());
 		return entities;
 	}
-	
+
 	@Transactional
 	public CategoryDTO findById(Long id) {
 		Optional<Category> obj = repository.findById(id);
 		Category category = obj.orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada."));
-		LOG.info("Categoria " + category.getName() + " retornado com sucesso!");
+		LOG.info("Categoria {} retornado com sucesso.", category.getName());
 		return new CategoryDTO(category);
 	}
 
@@ -66,7 +68,7 @@ public class CategoryService {
 		}
 		User entity = authService.authenticated();
 		repository.deleteById(id);
-		LOG.info("Categoria deletada com sucesso pelo usuário " + entity.getName());
+		LOG.info("Categoria deletada com sucesso pelo usuário {}", entity.getName());
 	}
 
 }

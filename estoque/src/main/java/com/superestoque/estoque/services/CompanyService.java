@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,25 +27,28 @@ public class CompanyService {
 
 	private static final List<String> ALLOWED_FILE_TYPES = Arrays.asList("image/jpeg", "image/png");
 
-	@Autowired
-	private CompanyRepository repository;
+	private final CompanyRepository repository;
 
-	@Autowired
-	private AuthService authService;
+	private final AuthService authService;
+
+	public CompanyService(CompanyRepository repository, AuthService authService) {
+		this.repository = repository;
+		this.authService = authService;
+	}
 
 	@Transactional
 	public CompanyDTO findById() {
 		User user = authService.authenticated();
-		LOG.info("Usuário " + user.getUsername() + " buscando empresa com o id " + user.getCompany().getId());
+		LOG.info("Usuário {} buscando empresa com o id {} ", user.getUsername(), user.getCompany().getId());
 		Company entity = repository.findById(user.getCompany().getId())
 				.orElseThrow(() -> new ResourceNotFoundException("Empresa não encontrada"));
-		LOG.info("Empresa retornada com sucesso:" + entity.getId());
+		LOG.info("Empresa retornada com sucesso {}", entity.getId());
 		return new CompanyDTO(entity);
 	}
 
 	@Transactional
 	public CompanyDTO updateDataByUser(Long id, String name, MultipartFile photo) throws IOException {
-		LOG.info("Tentando atualizar nome e foto da empresa: " + id);
+		LOG.info("Tentando atualizar nome e foto da empresa {} ", id);
 		if (!ALLOWED_FILE_TYPES.contains(photo.getContentType())) {
 			throw new IllegalArgumentException("Tipo de arquivo inválido Somente JPEG e PNG são permitidos.");
 		}
@@ -54,18 +56,18 @@ public class CompanyService {
 		Company company = obj.orElseThrow(() -> new ResourceNotFoundException("Empresa não encontrada."));
 		updateData(company, name, photo);
 		company = repository.save(company);
-		LOG.info("Foto e nome da empresa" + id + " atualizada com sucesso!");
+		LOG.info("Foto e nome da empresa {} atualizada com sucesso.", id);
 		return new CompanyDTO(company);
 	}
 
 	@Transactional
 	public List<UserDTO> findAllUserByCompany() {
 		User user = authService.authenticated();
-		LOG.info("Usuário " + user.getUsername() + " buscando usuários da empresa " + user.getCompany().getId());
+		LOG.info("Usuário {} buscando usuários da empresa {}", user.getUsername(), user.getCompany().getId());
 		Company entity = repository.findById(user.getCompany().getId())
 				.orElseThrow(() -> new ResourceNotFoundException("Empresa não encontrada"));
 		List<UserDTO> entities = entity.getUsers().stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
-		LOG.info("Usuários retornados com sucesso!");
+		LOG.info("Usuários retornados com sucesso.");
 		return entities;
 	}
 

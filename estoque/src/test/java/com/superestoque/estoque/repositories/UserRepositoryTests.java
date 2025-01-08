@@ -14,7 +14,7 @@ import com.superestoque.estoque.entities.User;
 import com.superestoque.estoque.factories.UserFactory;
 
 @DataJpaTest
-public class UserRepositoryTests {
+class UserRepositoryTests {
 
 	@Autowired
 	private UserRepository repository;
@@ -38,25 +38,25 @@ public class UserRepositoryTests {
 	}
 
 	@Test
-	public void deleteShouldReturnNulltWhenIdNonExists() {
+	void deleteShouldReturnNulltWhenIdNonExists() {
 		Optional<User> result = repository.findById(nonExistingId);
-		
+
 		Assertions.assertTrue(result.isEmpty());
 	}
 
 	@Test
-	public void deleteShouldDeleteObjectWhenIdExists() {
+	void deleteShouldDeleteObjectWhenIdExists() {
 		repository.deleteById(existingId);
 		Optional<User> result = repository.findById(existingId);
-		
+
 		Assertions.assertFalse(result.isPresent());
 	}
 
 	@Test
-	public void saveShouldPersistUser() {
+	void saveShouldPersistUser() {
 		user.getRoles().add(role);
 		user = repository.save(user);
-		
+
 		Assertions.assertNotNull(role.getId());
 		Assertions.assertEquals(1, role.getId());
 		Assertions.assertEquals(1, user.getRoles().size());
@@ -65,11 +65,11 @@ public class UserRepositoryTests {
 	}
 
 	@Test
-	public void saveShouldPersistUserWithTwoRoles() {
+	void saveShouldPersistUserWithTwoRoles() {
 		user.getRoles().add(role);
 		user.getRoles().add(new Role(2L, "ROLE_OPERATOR"));
 		user = repository.save(user);
-		
+
 		Assertions.assertNotNull(role.getId());
 		Assertions.assertEquals(1, role.getId());
 		Assertions.assertEquals(2, user.getRoles().size());
@@ -78,81 +78,81 @@ public class UserRepositoryTests {
 	}
 
 	@Test
-	public void findByIdShouldReturnNullWhenIdNonExists() {
+	void findByIdShouldReturnNullWhenIdNonExists() {
 		Optional<User> result = repository.findById(nonExistingId);
-		
+
 		Assertions.assertTrue(result.isEmpty());
 	}
 
 	@Test
-	public void findByIdShouldReturnNonNullWhenIdExists() {
+	void findByIdShouldReturnNonNullWhenIdExists() {
 		Optional<User> result = repository.findById(existingId);
-		
+
 		Assertions.assertTrue(result.isPresent());
 	}
 
 	@Test
-	public void findByEmailShouldReturnNullWhenEmailNonExists() {
+	void findByEmailShouldReturnNullWhenEmailNonExists() {
 		User user = repository.findByEmail(nonExistingEmail);
-		
+
 		Assertions.assertEquals(null, user);
 	}
 
 	@Test
-	public void findByEmailShouldReturnNonNullWhenEmailNonExists() {
+	void findByEmailShouldReturnNonNullWhenEmailNonExists() {
 		user = repository.save(user);
 		User user = repository.findByEmail("alex.brown@ifpe.com");
-		
+
 		Assertions.assertEquals("Alex Brown", user.getName());
 	}
 
 	@Test
-	public void updateShouldPersistNewDatauserWhenIdExists() {
+	void updateShouldPersistNewDatauserWhenIdExists() {
 		user = repository.getReferenceById(existingId);
 		user.setName("Nome atualiado");
 		user.setEmail("email@atualizado.com");
 		user = repository.save(user);
-		
+
 		Assertions.assertEquals("Nome atualiado", user.getName());
 		Assertions.assertEquals("email@atualizado.com", user.getEmail());
 	}
 
 	@Test
-	public void updateShouldReturnNulltWhenIdNonExists() {
+	void updateShouldReturnNulltWhenIdNonExists() {
 		Optional<User> result = repository.findById(nonExistingId);
-		
+
 		Assertions.assertTrue(result.isEmpty());
 	}
 
 	@Test
-	public void updateRolesShouldPersistUpdatedRolesWhenIdExists() {
+	void updateRolesShouldPersistUpdatedRolesWhenIdExists() {
 		user = repository.getReferenceById(existingId);
 		Role newRole = new Role(2L, "ROLE_OPERATOR");
 		user.getRoles().add(newRole);
 		user = repository.save(user);
-		
+
 		Assertions.assertEquals(2, user.getRoles().size());
 		Assertions.assertTrue(user.getRoles().contains(newRole));
 	}
 
 	@Test
-	public void deleteShouldRemoveUserButNotRolesWhenIdExists() {
+	void deleteShouldRemoveUserButNotRolesWhenIdExists() {
 		user.getRoles().add(role);
 		user = repository.save(user);
 		Long savedUserId = user.getId();
 		repository.deleteById(savedUserId);
 		Optional<User> deletedUser = repository.findById(savedUserId);
-		
+
 		Assertions.assertTrue(deletedUser.isEmpty());
 		Assertions.assertNotNull(roleRepository.getReferenceById(role.getId()));
 	}
-	
+
 	@Test
-	public void findAllShouldReturnAllUsers() {
-	    user = repository.save(user);
-	    List<User> users = repository.findAll();
-	    Assertions.assertFalse(users.isEmpty());
-	    Assertions.assertTrue(users.contains(user));
+	void findAllShouldReturnAllUsers() {
+		user = repository.save(user);
+		List<User> users = repository.findAll();
+		Assertions.assertFalse(users.isEmpty());
+		Assertions.assertTrue(users.contains(user));
 	}
 
 }

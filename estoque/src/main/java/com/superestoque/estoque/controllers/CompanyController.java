@@ -3,7 +3,6 @@ package com.superestoque.estoque.controllers;
 import java.io.IOException;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +28,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 @RequestMapping("/company")
 public class CompanyController {
 
-	@Autowired
-	private CompanyService service;
+	private final CompanyService service;
+
+	public CompanyController(CompanyService service) {
+		this.service = service;
+	}
 
 	@Operation(description = "This endpoint is used for return a Company", summary = "Returns the currently logged in user company", responses = {
 			@ApiResponse(description = "Ok", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CompanyDTO.class))),

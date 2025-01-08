@@ -5,10 +5,10 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ProductTests {
+class ProductTests {
 
 	@Test
-	public void productShouldHaveCorrectStructure() {
+	void productShouldHaveCorrectStructure() {
 
 		Product entity = new Product();
 
@@ -30,42 +30,42 @@ public class ProductTests {
 	}
 
 	@Test
-	public void equalsShouldReturnTrueWhenComparingSameObject() {
+	void equalsShouldReturnTrueWhenComparingSameObject() {
 		Product product = new Product(1L, "Product A", 10, "Description", null, 5, BigDecimal.valueOf(10.0));
 
-		Assertions.assertTrue(product.equals(product));
+		Assertions.assertEquals(product, product);
 	}
 
 	@Test
-	public void equalsShouldReturnFalseWhenComparingWithNull() {
+	void equalsShouldReturnFalseWhenComparingWithNull() {
 		Product product = new Product(1L, "Product A", 10, "Description", null, 5, BigDecimal.valueOf(10.0));
 
-		Assertions.assertFalse(product.equals(null));
+		Assertions.assertNotEquals(product, null);
 	}
 
 	@Test
-	public void equalsShouldReturnFalseWhenComparingWithDifferentClass() {
+	void equalsShouldReturnFalseWhenComparingWithDifferentClass() {
 		Product product = new Product(1L, "Product A", 10, "Description", null, 5, BigDecimal.valueOf(10.0));
 		String differentClassObject = "Different Class";
 
-		Assertions.assertFalse(product.equals(differentClassObject));
+		Assertions.assertNotEquals(product, differentClassObject);
 	}
 
 	@Test
-	public void equalsShouldReturnFalseWhenIdOrNameAreDifferent() {
+	void equalsShouldReturnFalseWhenIdOrNameAreDifferent() {
 		Product product1 = new Product(1L, "Product A", 10, "Description", null, 5, BigDecimal.valueOf(10.0));
 		Product product2 = new Product(2L, "Product A", 10, "Description", null, 5, BigDecimal.valueOf(10.0));
 		Product product3 = new Product(1L, "Product B", 10, "Description", null, 5, BigDecimal.valueOf(10.0));
 
-		Assertions.assertFalse(product1.equals(product2));
-		Assertions.assertFalse(product1.equals(product3));
+		Assertions.assertNotEquals(product1, product2);
+		Assertions.assertNotEquals(product1, product3);
 	}
 
 	@Test
-	public void equalsShouldReturnTrueWhenIdAndNameAreEqual() {
+	void equalsShouldReturnTrueWhenIdAndNameAreEqual() {
 		Product product1 = new Product(1L, "Product A", 10, "Description", null, 5, BigDecimal.valueOf(10.0));
 		Product product2 = new Product(1L, "Product A", 15, "Different Description", null, 5, BigDecimal.valueOf(15.0));
 
-		Assertions.assertTrue(product1.equals(product2));
+		Assertions.assertEquals(product1, product2);
 	}
 }

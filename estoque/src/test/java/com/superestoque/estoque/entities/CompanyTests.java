@@ -3,10 +3,10 @@ package com.superestoque.estoque.entities;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class CompanyTests {
+class CompanyTests {
 
 	@Test
-	public void companyShouldHaveCorrectStructure() {
+	void companyShouldHaveCorrectStructure() {
 		Company entity = new Company();
 
 		entity.setId(1L);
@@ -21,47 +21,47 @@ public class CompanyTests {
 	}
 
 	@Test
-	public void equalsShouldReturnTrueWhenComparingSameObject() {
+	void equalsShouldReturnTrueWhenComparingSameObject() {
 		Company company = new Company(1L, "Company A", "123456789", null);
 
-		Assertions.assertTrue(company.equals(company));
+		Assertions.assertEquals(company, company);
 	}
 
 	@Test
-	public void equalsShouldReturnFalseWhenComparingWithNull() {
+	void equalsShouldReturnFalseWhenComparingWithNull() {
 		Company company = new Company(1L, "Company A", "123456789", null);
 
-		Assertions.assertFalse(company.equals(null));
+		Assertions.assertNotEquals(company, null);
 	}
 
 	@Test
-	public void equalsShouldReturnFalseWhenComparingWithDifferentClass() {
+	void equalsShouldReturnFalseWhenComparingWithDifferentClass() {
 		Company company = new Company(1L, "Company A", "123456789", null);
 		String differentClassObject = "Different Class";
 
-		Assertions.assertFalse(company.equals(differentClassObject));
+		Assertions.assertNotEquals(company, differentClassObject);
 	}
 
 	@Test
-	public void equalsShouldReturnFalseWhenIdOrNameAreDifferent() {
+	void equalsShouldReturnFalseWhenIdOrNameAreDifferent() {
 		Company company1 = new Company(1L, "Company A", "123456789", null);
 		Company company2 = new Company(2L, "Company A", "123456789", null);
 		Company company3 = new Company(1L, "Company B", "123456789", null);
 
-		Assertions.assertFalse(company1.equals(company2));
-		Assertions.assertFalse(company1.equals(company3));
+		Assertions.assertNotEquals(company1, company2);
+		Assertions.assertNotEquals(company1, company3);
 	}
 
 	@Test
-	public void equalsShouldReturnTrueWhenIdAndNameAreEqual() {
+	void equalsShouldReturnTrueWhenIdAndNameAreEqual() {
 		Company company1 = new Company(1L, "Company A", "123456789", null);
 		Company company2 = new Company(1L, "Company A", "987654321", null);
 
-		Assertions.assertTrue(company1.equals(company2));
+		Assertions.assertEquals(company1, company2);
 	}
 
 	@Test
-	public void hashCodeShouldBeConsistentWithEquals() {
+	void hashCodeShouldBeConsistentWithEquals() {
 		Company company1 = new Company(1L, "Company A", "123456789", null);
 		Company company2 = new Company(1L, "Company A", "987654321", null);
 
@@ -69,7 +69,7 @@ public class CompanyTests {
 	}
 
 	@Test
-	public void hashCodeShouldBeDifferentForDifferentObjects() {
+	void hashCodeShouldBeDifferentForDifferentObjects() {
 		Company company1 = new Company(1L, "Company A", "123456789", null);
 		Company company2 = new Company(2L, "Company B", "987654321", null);
 

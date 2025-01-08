@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +38,11 @@ import jakarta.validation.Valid;
 @RequestMapping(value = "/users")
 public class UserController {
 
-	@Autowired
-	private UserService service;
+	private final UserService service;
+
+	public UserController(UserService service) {
+		this.service = service;
+	}
 
 	@Operation(description = "This endpoint is used for return a User", summary = "Returns the currently logged in user", responses = {
 			@ApiResponse(description = "Ok", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
@@ -79,6 +81,18 @@ public class UserController {
 	@PutMapping(value = "/desactive/{id}")
 	public ResponseEntity<Void> desactivateUser(@PathVariable Long id) {
 		service.desactivateUser(id);
+		return ResponseEntity.noContent().build();
+	}
+
+	@Operation(description = "This endpoint is used for activate a user", summary = "Change status for a User", responses = {
+			@ApiResponse(description = "No content", responseCode = "204"),
+			@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Unauthorized\"}"))),
+			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Forbidden\"}"))),
+			@ApiResponse(description = "Not Found", responseCode = "404", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"timestamp\": \"2024-02-04T12:00:00Z\",\n\"status\": 404,\n\"error\": \"Recurso não encontrado\",\n\"message\": \"Usuário não encontrado\",\n\"path\": \"/users/{id}\"}"), schema = @Schema(implementation = StandardError.class))) })
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping(value = "/active/{id}")
+	public ResponseEntity<Void> activeUser(@PathVariable Long id) {
+		service.activeUser(id);
 		return ResponseEntity.noContent().build();
 	}
 

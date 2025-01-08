@@ -32,7 +32,7 @@ import com.superestoque.estoque.services.exceptions.ResourceNotFoundException;
 import com.superestoque.estoque.services.exceptions.ValidMultiFormDataException;
 
 @ExtendWith(SpringExtension.class)
-public class UserServiceTests {
+class UserServiceTests {
 
 	@InjectMocks
 	private UserService service;
@@ -84,7 +84,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void findUserByIdShouldReturnUserDTO() {
+	void findUserByIdShouldReturnUserDTO() {
 		UserDTO result = service.findUserById();
 
 		Assertions.assertNotNull(result);
@@ -94,7 +94,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void findUserByEmailShouldThrowUsernameNotFoundExceptionWhenEmailDoesExists() {
+	void findUserByEmailShouldThrowUsernameNotFoundExceptionWhenEmailDoesExists() {
 		Assertions.assertThrows(UsernameNotFoundException.class, () -> {
 			service.loadUserByUsername(nonExistingEmail);
 		});
@@ -103,7 +103,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void saveUserShouldReturnUserDTO() {
+	void saveUserShouldReturnUserDTO() {
 		UserDTO result = service.saveNewUser(new UserInsertDTO(entityDTO.getId(), entity.getName(), entity.getEmail(),
 				entityDTO.getPhoto(), true, true, entity.getPassword()), roles);
 
@@ -115,7 +115,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void desactiveShouldDoNotWhenIdExisting() {
+	void desactiveShouldDoNotWhenIdExisting() {
 		Assertions.assertDoesNotThrow(() -> {
 			service.desactivateUser(existingId);
 		});
@@ -124,14 +124,30 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void desactiveShouldThrowResourceNotFoundExceptionWhenIdDoesExisting() {
+	void desactiveShouldThrowResourceNotFoundExceptionWhenIdDoesExisting() {
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
 			service.desactivateUser(nonExistingId);
 		});
 	}
 
 	@Test
-	public void updatePasswordShouldUpdateUserPasswordWhenIdExists() {
+	void activeShouldDoNotWhenIdExisting() {
+		Assertions.assertDoesNotThrow(() -> {
+			service.activeUser(existingId);
+		});
+		Optional<User> user = repository.findById(existingId);
+		Assertions.assertEquals(true, user.get().isStatus());
+	}
+
+	@Test
+	void activeShouldThrowResourceNotFoundExceptionWhenIdDoesExisting() {
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+			service.activeUser(nonExistingId);
+		});
+	}
+
+	@Test
+	void updatePasswordShouldUpdateUserPasswordWhenIdExists() {
 		UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO("newPassword123");
 
 		Assertions.assertDoesNotThrow(() -> {
@@ -142,7 +158,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void updatePasswordShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+	void updatePasswordShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
 		UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO("newPassword123");
 
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
@@ -154,7 +170,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void updateRoleShouldUpdateUserRoleWhenIdExists() {
+	void updateRoleShouldUpdateUserRoleWhenIdExists() {
 
 		Assertions.assertDoesNotThrow(() -> {
 			service.updateRole(existingId, role.getId());
@@ -165,7 +181,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void updateRoleShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+	void updateRoleShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
 		Long roleId = 1L;
 
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
@@ -177,7 +193,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void loadUserByUsernameShouldReturnUserWhenEmailExists() {
+	void loadUserByUsernameShouldReturnUserWhenEmailExists() {
 		UserDetails result = service.loadUserByUsername(existingEmail);
 
 		Assertions.assertNotNull(result);
@@ -186,8 +202,8 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void copyInsertDtoToEntityShouldCopyFieldsCorrectly() {
-		UserInsertDTO dto = new UserInsertDTO(null, "Test User", "test@test.com", null, true, true, "123456");
+	void copyInsertDtoToEntityShouldCopyFieldsCorrectly() {
+		UserInsertDTO dto = new UserInsertDTO(null, "Test User", "test@test.com", null, true, true, "Senh@123");
 		dto.getRoles().add(new RoleDTO(role.getId(), "ROLE_ADMIN"));
 
 		UserDTO user = service.saveNewUser(dto, roles);
@@ -197,7 +213,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void desactivateUserShouldChangeStatusToFalse() {
+	void desactivateUserShouldChangeStatusToFalse() {
 		service.desactivateUser(existingId);
 
 		Optional<User> user = repository.findById(existingId);
@@ -207,7 +223,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void updatePasswordShouldEncodePasswordCorrectly() {
+	void updatePasswordShouldEncodePasswordCorrectly() {
 		UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO("newPassword123");
 		service.updatePassword(existingEmail, dto);
 
@@ -216,7 +232,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void updateRoleShouldNotDuplicateRole() {
+	void updateRoleShouldNotDuplicateRole() {
 		Role existingRole = new Role(role.getId(), "ROLE_ADMIN");
 		entity.getRoles().add(existingRole);
 
@@ -228,8 +244,8 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void updateUserShouldUpdateUserWhenEmailExists() {
-		UserUpdateDTO updateDTO = new UserUpdateDTO("newpassword", new byte[] { 1, 2, 3 });
+	void updateUserShouldUpdateUserWhenEmailExists() {
+		UserUpdateDTO updateDTO = new UserUpdateDTO("Senh@123", new byte[] { 1, 2, 3 });
 
 		Assertions.assertDoesNotThrow(() -> {
 			service.updateUser(existingEmail, updateDTO);
@@ -239,7 +255,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void updateUserShouldThrowResourceNotFoundExceptionWhenEmailDoesNotExist() {
+	void updateUserShouldThrowResourceNotFoundExceptionWhenEmailDoesNotExist() {
 		UserUpdateDTO updateDTO = new UserUpdateDTO("newpassword", new byte[] { 1, 2, 3 });
 
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
@@ -251,8 +267,8 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void updateUserShouldNotUpdatePhotoIfPhotoIsNull() {
-		UserUpdateDTO updateDTO = new UserUpdateDTO("newpassword", new byte[] { 1, 2, 3 });
+	void updateUserShouldNotUpdatePhotoIfPhotoIsNull() {
+		UserUpdateDTO updateDTO = new UserUpdateDTO("Senh@123", new byte[] { 1, 2, 3 });
 
 		service.updateUser(existingEmail, updateDTO);
 
@@ -260,7 +276,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void getUserPhotoShouldReturnPhotoWhenEmailExists() {
+	void getUserPhotoShouldReturnPhotoWhenEmailExists() {
 		UserPhoto photo = service.getUserPhoto(existingEmail);
 
 		Assertions.assertNotNull(photo);
@@ -269,7 +285,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void getUserPhotoShouldThrowResourceNotFoundExceptionWhenEmailDoesNotExist() {
+	void getUserPhotoShouldThrowResourceNotFoundExceptionWhenEmailDoesNotExist() {
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
 			service.getUserPhoto(nonExistingEmail);
 		});
@@ -278,7 +294,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void validUserShouldThrowExceptionWhenEmailAlreadyExists() {
+	void validUserShouldThrowExceptionWhenEmailAlreadyExists() {
 		Mockito.when(repository.getByEmail(existingEmail)).thenReturn(Optional.of(entity));
 
 		UserInsertDTO insertDTO = new UserInsertDTO(null, "Test User", existingEmail, null, true, true, "password123");
@@ -291,9 +307,8 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void validUserShouldValidateFieldsCorrectly() {
-		UserInsertDTO validDTO = new UserInsertDTO(null, "Valid User", "valid@test.com", null, true, true,
-				"password123");
+	void validUserShouldValidateFieldsCorrectly() {
+		UserInsertDTO validDTO = new UserInsertDTO(null, "Valid User", "valid@test.com", null, true, true, "Senh@123");
 
 		Assertions.assertDoesNotThrow(() -> {
 			service.saveNewUser(validDTO, roles);

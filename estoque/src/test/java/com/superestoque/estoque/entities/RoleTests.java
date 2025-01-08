@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 
 import com.superestoque.estoque.entities.dto.RoleDTO;
 
-public class RoleTests {
+class RoleTests {
 
 	@Test
-	public void roleShouldHaveCorrectStructure() {
+	void roleShouldHaveCorrectStructure() {
 
 		Role entity = new Role();
 		entity.setId(1L);
@@ -22,7 +22,7 @@ public class RoleTests {
 	}
 
 	@Test
-	public void roleConstructorShouldSetFieldsCorrectly() {
+	void roleConstructorShouldSetFieldsCorrectly() {
 		RoleDTO dto = new RoleDTO(2L, "ROLE_ADMIN");
 		Role entity = new Role(dto);
 
@@ -31,35 +31,35 @@ public class RoleTests {
 	}
 
 	@Test
-	public void equalsShouldReturnTrueWhenComparingSameObject() {
+	void equalsShouldReturnTrueWhenComparingSameObject() {
 		Role role = new Role();
 		role.setId(1L);
 		role.setAuthority("ROLE_ADMIN");
 
-		Assertions.assertTrue(role.equals(role));
+		Assertions.assertEquals(role, role);
 	}
 
 	@Test
-	public void equalsShouldReturnFalseWhenComparingWithNull() {
+	void equalsShouldReturnFalseWhenComparingWithNull() {
 		Role role = new Role();
 		role.setId(1L);
 		role.setAuthority("ROLE_ADMIN");
 
-		Assertions.assertFalse(role.equals(null));
+		Assertions.assertNotEquals(role, null);
 	}
 
 	@Test
-	public void equalsShouldReturnFalseWhenComparingDifferentClass() {
+	void equalsShouldReturnFalseWhenComparingDifferentClass() {
 		Role role = new Role();
 		role.setId(1L);
 		role.setAuthority("ROLE_ADMIN");
 
 		String differentClassObject = "Different Class Object";
-		Assertions.assertFalse(role.equals(differentClassObject));
+		Assertions.assertNotEquals(role, differentClassObject);
 	}
 
 	@Test
-	public void equalsShouldReturnFalseWhenIdOrAuthorityAreDifferent() {
+	void equalsShouldReturnFalseWhenIdOrAuthorityAreDifferent() {
 		Role role1 = new Role();
 		role1.setId(1L);
 		role1.setAuthority("ROLE_ADMIN");
@@ -72,12 +72,12 @@ public class RoleTests {
 		role3.setId(1L);
 		role3.setAuthority("ROLE_USER");
 
-		Assertions.assertFalse(role1.equals(role2));
-		Assertions.assertFalse(role1.equals(role3));
+		Assertions.assertNotEquals(role1, role2);
+		Assertions.assertNotEquals(role1, role3);
 	}
 
 	@Test
-	public void equalsShouldReturnTrueWhenIdAndAuthorityAreEqual() {
+	void equalsShouldReturnTrueWhenIdAndAuthorityAreEqual() {
 		Role role1 = new Role();
 		role1.setId(1L);
 		role1.setAuthority("ROLE_ADMIN");
@@ -86,6 +86,6 @@ public class RoleTests {
 		role2.setId(1L);
 		role2.setAuthority("ROLE_ADMIN");
 
-		Assertions.assertTrue(role1.equals(role2));
+		Assertions.assertEquals(role1, role2);
 	}
 }

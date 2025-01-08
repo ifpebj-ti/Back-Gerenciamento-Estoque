@@ -27,7 +27,7 @@ public class UserDTO implements Serializable {
 	private byte[] photo;
 	private boolean status;
 	private boolean first_acess;
-	Set<RoleDTO> roles = new HashSet<>();;
+	private Set<RoleDTO> roles = new HashSet<>();;
 
 	public UserDTO() {
 	}

@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,20 +28,24 @@ public class ProductService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProductService.class);
 
-	@Autowired
-	private ProductRepository repository;
+	private final ProductRepository repository;
 
-	@Autowired
-	private CompanyService companyService;
+	private final CompanyService companyService;
 
-	@Autowired
-	private AuthService authService;
+	private final AuthService authService;
 
-	@Autowired
-	private CategoryService categoryService;
+	private final CategoryService categoryService;
 
-	@Autowired
-	private EmailService emailService;
+	private final EmailService emailService;
+
+	public ProductService(ProductRepository repository, CompanyService companyService, AuthService authService,
+			CategoryService categoryService, EmailService emailService) {
+		this.repository = repository;
+		this.companyService = companyService;
+		this.authService = authService;
+		this.categoryService = categoryService;
+		this.emailService = emailService;
+	}
 
 	@Transactional
 	public Page<ProductDTO> findAllProductByCompanyIdPaged(Pageable pageable, Long categoryId) {
@@ -61,7 +64,7 @@ public class ProductService {
 	public ProductDTO findById(Long id) {
 		Optional<Product> obj = repository.findById(id);
 		Product product = obj.orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado."));
-		LOG.info("Produto " + product.getName() + " retornado com sucesso!");
+		LOG.info("Produto {} retornado com sucesso", product.getName());
 		return new ProductDTO(product, product.getCategories());
 	}
 
@@ -72,7 +75,7 @@ public class ProductService {
 			throw new ResourceNotFoundException("Produto não encontrado");
 		}
 		repository.deleteById(id);
-		LOG.info("Produto deletado com sucesso pelo usuário " + user.getEmail());
+		LOG.info("Produto deletado com sucesso pelo usuário {}", user.getEmail());
 	}
 
 	@Transactional
@@ -80,7 +83,7 @@ public class ProductService {
 		Product product = new Product();
 		copyInsertDtoToEntity(product, entity, categories);
 		repository.save(product);
-		LOG.info("Produto " + product.getName() + " criado com sucesso!");
+		LOG.info("Produto {} criado com sucesso.", product.getName());
 		return new ProductDTO(product, product.getCategories());
 	}
 
@@ -90,7 +93,7 @@ public class ProductService {
 		Product product = obj.orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado."));
 		updateData(product, entity, categories);
 		product = repository.save(product);
-		LOG.info("Atualizado dados do produto " + id + " com sucesso!");
+		LOG.info("Atualizado dados do produto {} com sucesso.", id);
 		return new ProductDTO(product);
 	}
 
