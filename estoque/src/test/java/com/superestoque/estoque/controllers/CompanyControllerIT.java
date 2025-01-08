@@ -22,7 +22,7 @@ import jakarta.transaction.Transactional;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class CompanyControllerIT {
+class CompanyControllerIT {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -46,7 +46,7 @@ public class CompanyControllerIT {
 	}
 
 	@Test
-	public void getMyCompanyShouldReturnCompanyWhenAdminAuthenticated() throws Exception {
+	void getMyCompanyShouldReturnCompanyWhenAdminAuthenticated() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		ResultActions result = mockMvc.perform(get("/company").header("Authorization", "Bearer " + accessToken)
@@ -58,14 +58,14 @@ public class CompanyControllerIT {
 	}
 
 	@Test
-	public void getMyCompanyShouldReturnUnauthorizedWhenNoTokenGiven() throws Exception {
+	void getMyCompanyShouldReturnUnauthorizedWhenNoTokenGiven() throws Exception {
 		ResultActions result = mockMvc.perform(get("/company").contentType(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	public void getMyCompanyShouldReturnForbiddenWhenOperatorAuthenticated() throws Exception {
+	void getMyCompanyShouldReturnForbiddenWhenOperatorAuthenticated() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
 		ResultActions result = mockMvc.perform(get("/company").header("Authorization", "Bearer " + accessToken)
@@ -75,7 +75,7 @@ public class CompanyControllerIT {
 	}
 
 	@Test
-	public void updateCompanyShouldUpdateCompanyWhenValidData() throws Exception {
+	void updateCompanyShouldUpdateCompanyWhenValidData() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		MockMultipartFile photo = new MockMultipartFile("photo", "photo.jpg", "image/jpeg",
@@ -94,7 +94,7 @@ public class CompanyControllerIT {
 	}
 
 	@Test
-	public void updateCompanyShouldReturnNotFoundWhenNonExistingId() throws Exception {
+	void updateCompanyShouldReturnNotFoundWhenNonExistingId() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		MockMultipartFile photo = new MockMultipartFile("photo", "photo.jpg", "image/jpeg",
@@ -112,7 +112,7 @@ public class CompanyControllerIT {
 	}
 
 	@Test
-	public void updateCompanyShouldReturnForbiddenWhenOperatorAuthenticated() throws Exception {
+	void updateCompanyShouldReturnForbiddenWhenOperatorAuthenticated() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
 		MockMultipartFile photo = new MockMultipartFile("photo", "photo.jpg", "image/jpeg",
@@ -129,7 +129,7 @@ public class CompanyControllerIT {
 	}
 
 	@Test
-	public void getUserMyCompanyShouldReturnListOfUsersWhenAdminAuthenticated() throws Exception {
+	void getUserMyCompanyShouldReturnListOfUsersWhenAdminAuthenticated() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		ResultActions result = mockMvc.perform(get("/company/users").header("Authorization", "Bearer " + accessToken)
@@ -142,14 +142,14 @@ public class CompanyControllerIT {
 	}
 
 	@Test
-	public void getUserMyCompanyShouldReturnUnauthorizedWhenNoTokenGiven() throws Exception {
+	void getUserMyCompanyShouldReturnUnauthorizedWhenNoTokenGiven() throws Exception {
 		ResultActions result = mockMvc.perform(get("/company/users").contentType(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	public void getUserMyCompanyShouldReturnForbiddenWhenOperatorAuthenticated() throws Exception {
+	void getUserMyCompanyShouldReturnForbiddenWhenOperatorAuthenticated() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
 		ResultActions result = mockMvc.perform(get("/company/users").header("Authorization", "Bearer " + accessToken)

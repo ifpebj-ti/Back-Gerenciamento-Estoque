@@ -14,7 +14,7 @@ public class OpenApiConfig {
 	@Bean
 	OpenAPI estoque() {
 		return new OpenAPI().info(new Info().title("Estoque API")
-				.description("Essa API tem como objetivo disponibilizar os dados.")
+				.description("Essa API tem como objetivo disponibilizar os dados de estoque para o front-end da aplicação.")
 				.version("1.0"));
 	}
 }

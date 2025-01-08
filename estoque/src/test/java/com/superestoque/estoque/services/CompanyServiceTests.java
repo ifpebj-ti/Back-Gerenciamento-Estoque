@@ -23,7 +23,7 @@ import com.superestoque.estoque.repositories.CompanyRepository;
 import com.superestoque.estoque.services.exceptions.ResourceNotFoundException;
 
 @ExtendWith(SpringExtension.class)
-public class CompanyServiceTests {
+class CompanyServiceTests {
 
 	@InjectMocks
 	private CompanyService service;
@@ -58,7 +58,7 @@ public class CompanyServiceTests {
 	}
 
 	@Test
-	public void updateDataByUserShouldUpdateCompanyDataWhenValidPhoto() throws IOException {
+	void updateDataByUserShouldUpdateCompanyDataWhenValidPhoto() throws IOException {
 		CompanyDTO result = service.updateDataByUser(existingCompanyId, "Updated Company", validPhoto);
 
 		Assertions.assertNotNull(result);
@@ -68,7 +68,7 @@ public class CompanyServiceTests {
 	}
 
 	@Test
-	public void updateDataByUserShouldThrowResourceNotFoundExceptionWhenCompanyDoesNotExist() {
+	void updateDataByUserShouldThrowResourceNotFoundExceptionWhenCompanyDoesNotExist() {
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
 			service.updateDataByUser(nonExistingCompanyId, "New Company", validPhoto);
 		});
@@ -78,7 +78,7 @@ public class CompanyServiceTests {
 	}
 
 	@Test
-	public void updateDataByUserShouldThrowIllegalArgumentExceptionWhenInvalidPhoto() {
+	void updateDataByUserShouldThrowIllegalArgumentExceptionWhenInvalidPhoto() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			service.updateDataByUser(existingCompanyId, "Updated Company", invalidPhoto);
 		});
@@ -87,7 +87,7 @@ public class CompanyServiceTests {
 	}
 
 	@Test
-	public void findAllUserByCompanyShouldThrowResourceNotFoundExceptionWhenCompanyDoesNotExist() {
+	void findAllUserByCompanyShouldThrowResourceNotFoundExceptionWhenCompanyDoesNotExist() {
 
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
 			service.findAllUserByCompany();
@@ -95,7 +95,7 @@ public class CompanyServiceTests {
 	}
 
 	@Test
-	public void findByIdShouldThrowResourceNotFoundExceptionWhenCompanyDoesNotExist() {
+	void findByIdShouldThrowResourceNotFoundExceptionWhenCompanyDoesNotExist() {
 		Mockito.when(repository.findById(user.getCompany().getId())).thenReturn(Optional.empty());
 
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
@@ -106,7 +106,7 @@ public class CompanyServiceTests {
 	}
 
 	@Test
-	public void updateDataShouldHandleIOException() throws IOException {
+	void updateDataShouldHandleIOException() throws IOException {
 		MockMultipartFile invalidPhoto = Mockito.mock(MockMultipartFile.class);
 		Mockito.when(invalidPhoto.getBytes()).thenThrow(IOException.class);
 

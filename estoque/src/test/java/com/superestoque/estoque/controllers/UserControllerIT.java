@@ -1,3 +1,4 @@
+
 package com.superestoque.estoque.controllers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -28,7 +29,7 @@ import jakarta.transaction.Transactional;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class UserControllerIT {
+class UserControllerIT {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -58,7 +59,7 @@ public class UserControllerIT {
 	}
 
 	@Test
-	public void findUserByIdShouldReturnUserWhenAuthenticatedAsAdmin() throws Exception {
+	void findUserByIdShouldReturnUserWhenAuthenticatedAsAdmin() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		ResultActions result = mockMvc.perform(get("/users/me").header("Authorization", "Bearer " + accessToken)
@@ -70,14 +71,14 @@ public class UserControllerIT {
 	}
 
 	@Test
-	public void findUserByIdShouldReturnUnauthorizedWhenNoTokenProvided() throws Exception {
+	void findUserByIdShouldReturnUnauthorizedWhenNoTokenProvided() throws Exception {
 		ResultActions result = mockMvc.perform(get("/users/me").contentType(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	public void insertShouldReturnUnauthorizedWhenNotValidToken() throws Exception {
+	void insertShouldReturnUnauthorizedWhenNotValidToken() throws Exception {
 
 		String jsonBody = objectMapper.writeValueAsString(userInsert);
 
@@ -88,43 +89,33 @@ public class UserControllerIT {
 	}
 
 	@Test
-	public void saveNewUserShouldReturnUnprocessableEntityWhenInvalidData() throws Exception {
-	    String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
+	void saveNewUserShouldReturnUnprocessableEntityWhenInvalidData() throws Exception {
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
-	    MockMultipartFile photo = new MockMultipartFile("photo", "test.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[0]);
+		MockMultipartFile photo = new MockMultipartFile("photo", "test.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[0]);
 
-	    ResultActions result = mockMvc.perform(multipart("/users")
-	            .file(photo)
-	            .param("name", "")
-	            .param("email", "invalid_email")
-	            .param("password", "short")
-	            .param("roles", "1", "2")
-	            .header("Authorization", "Bearer " + accessToken)
-	            .contentType(MediaType.MULTIPART_FORM_DATA));
+		ResultActions result = mockMvc.perform(multipart("/users").file(photo).param("name", "")
+				.param("email", "invalid_email").param("password", "short").param("roles", "1", "2")
+				.header("Authorization", "Bearer " + accessToken).contentType(MediaType.MULTIPART_FORM_DATA));
 
-	    result.andExpect(status().isUnprocessableEntity());
+		result.andExpect(status().isUnprocessableEntity());
 	}
 
 	@Test
-	public void saveNewUserShouldReturnForbiddenWhenOperatorAuthenticated() throws Exception {
+	void saveNewUserShouldReturnForbiddenWhenOperatorAuthenticated() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
-	    MockMultipartFile photo = new MockMultipartFile("photo", "test.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[0]);
+		MockMultipartFile photo = new MockMultipartFile("photo", "test.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[0]);
 
-	    ResultActions result = mockMvc.perform(multipart("/users")
-	            .file(photo)
-	            .param("name", "")
-	            .param("email", "invalid_email")
-	            .param("password", "short")
-	            .param("roles", "1", "2")
-	            .header("Authorization", "Bearer " + accessToken)
-	            .contentType(MediaType.MULTIPART_FORM_DATA));
+		ResultActions result = mockMvc.perform(multipart("/users").file(photo).param("name", "")
+				.param("email", "invalid_email").param("password", "short").param("roles", "1", "2")
+				.header("Authorization", "Bearer " + accessToken).contentType(MediaType.MULTIPART_FORM_DATA));
 
 		result.andExpect(status().isForbidden());
 	}
 
 	@Test
-	public void desactivateUserShouldReturnNoContentWhenAdmin() throws Exception {
+	void desactivateUserShouldReturnNoContentWhenAdmin() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		ResultActions result = mockMvc.perform(put("/users/desactive/{id}", existingId)
@@ -134,7 +125,7 @@ public class UserControllerIT {
 	}
 
 	@Test
-	public void desactivateUserShouldReturnNotFoundWhenNonExistingId() throws Exception {
+	void desactivateUserShouldReturnNotFoundWhenNonExistingId() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		ResultActions result = mockMvc.perform(put("/users/desactive/{id}", nonExistingId)
@@ -145,7 +136,7 @@ public class UserControllerIT {
 	}
 
 	@Test
-	public void desactivateUserShouldReturnForbiddenWhenOperatorAuthenticated() throws Exception {
+	void desactivateUserShouldReturnForbiddenWhenOperatorAuthenticated() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
 		ResultActions result = mockMvc.perform(put("/users/desactive/{id}", existingId)
@@ -155,22 +146,22 @@ public class UserControllerIT {
 	}
 
 	@Test
-	public void updatePasswordShouldReturnNoContentWhenValid() throws Exception {
+	void updatePasswordShouldReturnNoContentWhenValid() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("newPassword123");
 
 		String jsonBody = objectMapper.writeValueAsString(updatePasswordDTO);
 
-		ResultActions result = mockMvc
-				.perform(put("/users/updatePassword/{email}", adminUsername).header("Authorization", "Bearer " + accessToken)
+		ResultActions result = mockMvc.perform(
+				put("/users/updatePassword/{email}", adminUsername).header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON).content(jsonBody));
 
 		result.andExpect(status().isNoContent());
 	}
 
 	@Test
-	public void updatePasswordShouldReturnBadRequestWhenInvalidData() throws Exception {
+	void updatePasswordShouldReturnBadRequestWhenInvalidData() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("");
@@ -185,7 +176,7 @@ public class UserControllerIT {
 	}
 
 	@Test
-	public void updateRoleShouldReturnNoContentWhenValid() throws Exception {
+	void updateRoleShouldReturnNoContentWhenValid() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		RoleDTO roleDTO = new RoleDTO(1L, "ROLE_ADMIN");
@@ -199,7 +190,7 @@ public class UserControllerIT {
 	}
 
 	@Test
-	public void updateRoleShouldReturnForbiddenWhenNotAdmin() throws Exception {
+	void updateRoleShouldReturnForbiddenWhenNotAdmin() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
 		RoleDTO roleDTO = new RoleDTO(1L, "ROLE_ADMIN");
@@ -214,7 +205,7 @@ public class UserControllerIT {
 	}
 
 	@Test
-	public void updateRoleShouldReturnForbiddenWhenOperatorAuthenticated() throws Exception {
+	void updateRoleShouldReturnForbiddenWhenOperatorAuthenticated() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
 		RoleDTO roleDTO = new RoleDTO(1L, "ROLE_ADMIN");

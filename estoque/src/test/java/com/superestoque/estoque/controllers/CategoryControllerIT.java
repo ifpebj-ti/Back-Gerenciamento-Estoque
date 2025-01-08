@@ -24,7 +24,7 @@ import jakarta.transaction.Transactional;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class CategoryControllerIT {
+class CategoryControllerIT {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -54,7 +54,7 @@ public class CategoryControllerIT {
 	}
 
 	@Test
-	public void findAllShouldReturnListWhenAuthenticatedAsAdmin() throws Exception {
+	void findAllShouldReturnListWhenAuthenticatedAsAdmin() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		ResultActions result = mockMvc.perform(get("/categories").header("Authorization", "Bearer " + accessToken)
@@ -65,14 +65,14 @@ public class CategoryControllerIT {
 	}
 
 	@Test
-	public void findAllShouldReturnUnauthorizedWhenNoTokenProvided() throws Exception {
+	void findAllShouldReturnUnauthorizedWhenNoTokenProvided() throws Exception {
 		ResultActions result = mockMvc.perform(get("/categories").contentType(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	public void insertShouldCreateCategoryWhenDataIsValid() throws Exception {
+	void insertShouldCreateCategoryWhenDataIsValid() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		String jsonBody = objectMapper.writeValueAsString(validCategoryDTO);
@@ -86,7 +86,7 @@ public class CategoryControllerIT {
 	}
 
 	@Test
-	public void insertShouldReturnForbiddenWhenAuthenticatedAsOperator() throws Exception {
+	void insertShouldReturnForbiddenWhenAuthenticatedAsOperator() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, operatorUsername, password);
 
 		String jsonBody = objectMapper.writeValueAsString(validCategoryDTO);
@@ -98,7 +98,7 @@ public class CategoryControllerIT {
 	}
 
 	@Test
-	public void deleteShouldReturnNoContentWhenIdExists() throws Exception {
+	void deleteShouldReturnNoContentWhenIdExists() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		ResultActions result = mockMvc.perform(delete("/categories/{id}", existingId)
@@ -108,7 +108,7 @@ public class CategoryControllerIT {
 	}
 
 	@Test
-	public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+	void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
 		ResultActions result = mockMvc.perform(delete("/categories/{id}", nonExistingId)

@@ -32,20 +32,17 @@ public class CustomPasswordAuthenticationConverter implements AuthenticationConv
 		}
 
 		MultiValueMap<String, String> parameters = getParameters(request);
-
-		// scope (OPTIONAL)
+		
 		String scope = parameters.getFirst(OAuth2ParameterNames.SCOPE);
 		if (StringUtils.hasText(scope) && parameters.get(OAuth2ParameterNames.SCOPE).size() != 1) {
 			throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_REQUEST);
 		}
 
-		// username (REQUIRED)
 		String username = parameters.getFirst(OAuth2ParameterNames.USERNAME);
 		if (!StringUtils.hasText(username) || parameters.get(OAuth2ParameterNames.USERNAME).size() != 1) {
 			throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_REQUEST);
 		}
 
-		// password (REQUIRED)
 		String password = parameters.getFirst(OAuth2ParameterNames.PASSWORD);
 		if (!StringUtils.hasText(password) || parameters.get(OAuth2ParameterNames.PASSWORD).size() != 1) {
 			throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_REQUEST);

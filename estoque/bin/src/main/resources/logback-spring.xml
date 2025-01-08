@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<!-- Diretório de logs -->
+	<property name="LOG_DIR" value="./logs" />
+
+	<!-- Appender para logs no console -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Appender para logs gerais (INFO, ERROR, WARN, DEBUG, etc.) -->
+	<appender name="GENERAL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/application.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/application-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>365</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Appender para logs do serviço de usuários -->
+	<appender name="USER_SERVICE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/user_service.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/user_service-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>365</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Appender para logs do serviço de empresas -->
+	<appender name="COMPANY_SERVICE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/company_service.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/company_service-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>365</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Appender para logs do serviço de produtos -->
+	<appender name="PRODUCT_SERVICE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/product_service.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/product_service-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>365</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Logger para o serviço de usuários -->
+	<logger name="com.superestoque.estoque.services.UserService" level="INFO" additivity="false">
+		<appender-ref ref="USER_SERVICE" />
+	</logger>
+
+	<!-- Logger para o serviço de empresas -->
+	<logger name="com.superestoque.estoque.services.CompanyService" level="INFO" additivity="false">
+		<appender-ref ref="COMPANY_SERVICE" />
+	</logger>
+
+	<!-- Logger para o serviço de produtos -->
+	<logger name="com.superestoque.estoque.services.ProductService" level="INFO" additivity="false">
+		<appender-ref ref="PRODUCT_SERVICE" />
+	</logger>
+
+	<!-- Logger geral com nível INFO -->
+	<root level="INFO">
+		<appender-ref ref="GENERAL" />
+		<appender-ref ref="CONSOLE" />
+	</root>
+
+</configuration>

@@ -12,7 +12,7 @@ import com.superestoque.estoque.entities.Role;
 import com.superestoque.estoque.factories.RoleFactory;
 
 @DataJpaTest
-public class RoleRepositoryTests {
+class RoleRepositoryTests {
 
 	@Autowired
 	private RoleRepository repository;
@@ -29,14 +29,14 @@ public class RoleRepositoryTests {
 	}
 
 	@Test
-	public void deleteShouldDeleteObjectWhenIdExists() {
+	void deleteShouldDeleteObjectWhenIdExists() {
 		repository.deleteById(existingId);
 		Optional<Role> result = repository.findById(existingId);
 		Assertions.assertFalse(result.isPresent());
 	}
 
 	@Test
-	public void saveShouldPersistRole() {
+	void saveShouldPersistRole() {
 		role = repository.save(role);
 		Assertions.assertNotNull(role.getId());
 		Assertions.assertEquals(3, role.getId());
@@ -45,13 +45,13 @@ public class RoleRepositoryTests {
 	}
 
 	@Test
-	public void findyByIdShouldReturnNulltWhenIdNonExists() {
+	void findyByIdShouldReturnNulltWhenIdNonExists() {
 		Optional<Role> result = repository.findById(nonExistingId);
 		Assertions.assertTrue(result.isEmpty());
 	}
 
 	@Test
-	public void findyByIdShouldReturnNonNulltWhenIdExists() {
+	void findyByIdShouldReturnNonNulltWhenIdExists() {
 		Optional<Role> result = repository.findById(existingId);
 		Assertions.assertTrue(result.isPresent());
 	}

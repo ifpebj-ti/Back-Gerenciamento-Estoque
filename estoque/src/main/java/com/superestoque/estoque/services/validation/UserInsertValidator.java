@@ -3,8 +3,6 @@ package com.superestoque.estoque.services.validation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.superestoque.estoque.controllers.exception.FieldMessage;
 import com.superestoque.estoque.entities.User;
 import com.superestoque.estoque.entities.dto.UserInsertDTO;
@@ -15,8 +13,11 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class UserInsertValidator implements ConstraintValidator<UserInsertValid, UserInsertDTO> {
 
-	@Autowired
-	private UserRepository repository;
+	private final UserRepository repository;
+
+	public UserInsertValidator(UserRepository repository) {
+		this.repository = repository;
+	}
 
 	@Override
 	public void initialize(UserInsertValid ann) {
@@ -30,7 +31,6 @@ public class UserInsertValidator implements ConstraintValidator<UserInsertValid,
 		if (validEmail != null) {
 			list.add(new FieldMessage("email", "Esse email já está cadastrado"));
 		}
-
 
 		for (FieldMessage e : list) {
 			context.disableDefaultConstraintViolation();

@@ -33,7 +33,7 @@ import com.superestoque.estoque.services.exceptions.ResourceNotFoundException;
 import com.superestoque.estoque.services.exceptions.ValidMultiFormDataException;
 
 @ExtendWith(SpringExtension.class)
-public class ProductServiceTests {
+class ProductServiceTests {
 
 	@InjectMocks
 	private ProductService service;
@@ -90,7 +90,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void findAllProductByCompanyIdPagedShouldReturnPagedProducts() {
+	void findAllProductByCompanyIdPagedShouldReturnPagedProducts() {
 		Page<ProductDTO> result = service.findAllProductByCompanyIdPaged(PageRequest.of(0, 10), existingIdCategory);
 
 		Assertions.assertNotNull(result);
@@ -101,7 +101,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void findByIdShouldReturnProductWhenIdExists() {
+	void findByIdShouldReturnProductWhenIdExists() {
 		ProductDTO result = service.findById(existingId);
 
 		Assertions.assertNotNull(result);
@@ -110,7 +110,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+	void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
 			service.findById(nonExistingId);
 		});
@@ -119,7 +119,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void deleteByIdShouldDeleteProductWhenIdExists() {
+	void deleteByIdShouldDeleteProductWhenIdExists() {
 		Assertions.assertDoesNotThrow(() -> {
 			service.deleteById(existingId);
 		});
@@ -128,7 +128,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void deleteByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+	void deleteByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
 			service.deleteById(nonExistingId);
 		});
@@ -137,7 +137,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void saveNewProductShouldSaveAndReturnProductDTO() {
+	void saveNewProductShouldSaveAndReturnProductDTO() {
 		ProductDTO result = service.saveNewProduct(productDTO, categories);
 
 		Assertions.assertNotNull(result);
@@ -146,7 +146,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void updateProductShouldUpdateAndReturnProductDTOWhenIdExists() {
+	void updateProductShouldUpdateAndReturnProductDTOWhenIdExists() {
 		ProductDTO updatedDTO = ProductFactory.createProductDTO(company);
 		Mockito.when(repository.save(ArgumentMatchers.any())).thenReturn(product);
 
@@ -158,7 +158,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void updateProductShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+	void updateProductShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
 		ProductDTO updatedDTO = ProductFactory.createProductDTO(company);
 
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
@@ -169,7 +169,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void saveNewProductShouldThrowValidMultiFormDataExceptionWhenNameIsInvalid() {
+	void saveNewProductShouldThrowValidMultiFormDataExceptionWhenNameIsInvalid() {
 		ProductDTO invalidDTO = new ProductDTO(null, "", 0, "", null, 0, null, null);
 
 		Assertions.assertThrows(ValidMultiFormDataException.class, () -> {
@@ -180,7 +180,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void validProductShouldThrowExceptionWhenQuantityIsInvalid() {
+	void validProductShouldThrowExceptionWhenQuantityIsInvalid() {
 		ProductDTO invalidDTO = ProductFactory.createProductDTO(company);
 		invalidDTO.setQuantity(0);
 
@@ -192,7 +192,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void validProductShouldThrowExceptionWhenUnitValueIsInvalid() {
+	void validProductShouldThrowExceptionWhenUnitValueIsInvalid() {
 		ProductDTO invalidDTO = ProductFactory.createProductDTO(company);
 		invalidDTO.setUnitValue(BigDecimal.valueOf(0));
 
@@ -204,7 +204,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void copyInsertDtoToEntityShouldThrowExceptionWhenCategoriesAreEmpty() {
+	void copyInsertDtoToEntityShouldThrowExceptionWhenCategoriesAreEmpty() {
 		List<Long> emptyCategories = new ArrayList<>();
 
 		Assertions.assertThrows(ValidMultiFormDataException.class, () -> {
@@ -215,7 +215,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void copyInsertDtoToEntityShouldSetFieldsCorrectly() {
+	void copyInsertDtoToEntityShouldSetFieldsCorrectly() {
 		service.saveNewProduct(productDTO, categories);
 
 		Mockito.verify(repository, Mockito.times(1))
@@ -225,7 +225,7 @@ public class ProductServiceTests {
 	}
 
 	@Test
-	public void updateDataShouldHandleNullPhoto() {
+	void updateDataShouldHandleNullPhoto() {
 		ProductDTO updatedDTO = ProductFactory.createProductDTO(company);
 		updatedDTO.setPhoto(null);
 

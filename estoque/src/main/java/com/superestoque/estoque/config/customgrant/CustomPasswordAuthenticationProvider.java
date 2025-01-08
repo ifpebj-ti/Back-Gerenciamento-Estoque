@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -43,20 +42,17 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 	private static final Logger LOG = LoggerFactory.getLogger(CustomPasswordAuthenticationProvider.class);
 
 	private static final String ERROR_URI = "https://datatracker.ietf.org/doc/html/rfc6749#section-5.2";
+	private static final String LOGIN_ERROR = "Erro no login do usuário";
 	private final OAuth2AuthorizationService authorizationService;
 	private final UserDetailsService userDetailsService;
 	private final OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator;
 	private final PasswordEncoder passwordEncoder;
-	private String username = "";
-	private String password = "";
-	private Set<String> authorizedScopes = new HashSet<>();
 
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
 
 	public CustomPasswordAuthenticationProvider(OAuth2AuthorizationService authorizationService,
 			OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator, UserDetailsService userDetailsService,
-			PasswordEncoder passwordEncoder) {
+			PasswordEncoder passwordEncoder, UserRepository userRepository) {
 
 		Assert.notNull(authorizationService, "authorizationService cannot be null");
 		Assert.notNull(tokenGenerator, "TokenGenerator cannot be null");
@@ -66,10 +62,14 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 		this.tokenGenerator = tokenGenerator;
 		this.userDetailsService = userDetailsService;
 		this.passwordEncoder = passwordEncoder;
+		this.userRepository = userRepository;
 	}
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+		String username = "";
+		String password = "";
+		Set<String> authorizedScopes = new HashSet<>();
 
 		CustomPasswordAuthenticationToken customPasswordAuthenticationToken = (CustomPasswordAuthenticationToken) authentication;
 		OAuth2ClientAuthenticationToken clientPrincipal = getAuthenticatedClientElseThrowInvalidClient(
@@ -82,19 +82,19 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 		try {
 			user = userDetailsService.loadUserByUsername(username);
 		} catch (UsernameNotFoundException e) {
-			LOG.error("Erro no login do usuário " + username + " usuário não encontrado");
+			LOG.error("{} usuário e/ou senha inválidos", LOGIN_ERROR);
 			throw new OAuth2AuthenticationException("Usuário e/ou senha inválido");
 		}
 
 		if (!passwordEncoder.matches(password, user.getPassword()) || !user.getUsername().equals(username)) {
-			LOG.error("Erro no login do usuário " + user.getUsername() + " senha inválido");
+			LOG.error("{} senha inválido", LOGIN_ERROR);
 			throw new OAuth2AuthenticationException("Usuário e/ou senha inválido");
 		}
 
 		User entity = userRepository.findByEmail(user.getUsername());
 
 		if (!entity.isStatus()) {
-			LOG.error("Erro no login do usuário " + username + " desativado");
+			LOG.error("{}o usuário está desativado", LOGIN_ERROR);
 			throw new OAuth2AuthenticationException("Usuário não encontrado");
 		}
 
@@ -137,7 +137,7 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 				generatedAccessToken.getExpiresAt(), tokenContext.getAuthorizedScopes());
 		if (generatedAccessToken instanceof ClaimAccessor) {
 			authorizationBuilder.token(accessToken,
-					(metadata) -> metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME,
+					metadata -> metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME,
 							((ClaimAccessor) generatedAccessToken).getClaims()));
 		} else {
 			authorizationBuilder.accessToken(accessToken);
@@ -145,7 +145,7 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 
 		OAuth2Authorization authorization = authorizationBuilder.build();
 		this.authorizationService.save(authorization);
-		LOG.info("Usuário " + username + " logado com sucesso");
+		LOG.info("Usuário {} logado com sucesso", username);
 		return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal, accessToken);
 	}
 

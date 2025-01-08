@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,27 +34,31 @@ public class UserService implements UserDetailsService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
-	@Autowired
-	private UserRepository repository;
+	private final UserRepository repository;
 
-	@Autowired
-	private RoleRepository roleRepository;
+	private final RoleRepository roleRepository;
 
 	private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-	@Autowired
-	private AuthService authService;
+	private final AuthService authService;
 
-	@Autowired
-	private PasswordResetTokenRepository passwordResetTokenRepository;
+	private final PasswordResetTokenRepository passwordResetTokenRepository;
 
-	@Autowired
-	private EmailService emailService;
+	private final EmailService emailService;
+
+	public UserService(UserRepository repository, RoleRepository roleRepository, AuthService authService,
+			PasswordResetTokenRepository passwordResetTokenRepository, EmailService emailService) {
+		this.repository = repository;
+		this.roleRepository = roleRepository;
+		this.authService = authService;
+		this.passwordResetTokenRepository = passwordResetTokenRepository;
+		this.emailService = emailService;
+	}
 
 	@Transactional
 	public UserDTO findUserById() {
 		User entity = authService.authenticated();
-		LOG.info("Usuário " + entity.getUsername() + " retornado com sucesso!");
+		LOG.info("Usuário {} retornado com sucesso.", entity.getUsername());
 		return new UserDTO(entity, entity.getRoles());
 	}
 
@@ -68,7 +71,7 @@ public class UserService implements UserDetailsService {
 		user.setStatus(true);
 		user.setFirst_acess(true);
 		repository.save(user);
-		LOG.info("Usuário " + user.getUsername() + " criado com sucesso!");
+		LOG.info("Usuário {} criado com sucesso.", user.getUsername());
 		return new UserDTO(user);
 	}
 
@@ -77,7 +80,16 @@ public class UserService implements UserDetailsService {
 		Optional<User> obj = repository.findById(id);
 		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 		user.setStatus(false);
-		LOG.info("Desativando o usuário " + id + " com sucesso!");
+		LOG.info("Desativando o usuário {} com sucesso.", id);
+		repository.save(user);
+	}
+
+	@Transactional
+	public void activeUser(Long id) {
+		Optional<User> obj = repository.findById(id);
+		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+		user.setStatus(true);
+		LOG.info("Ativando o usuário {} com sucesso.", id);
 		repository.save(user);
 	}
 
@@ -99,7 +111,7 @@ public class UserService implements UserDetailsService {
 			user.setFirst_acess(false);
 		}
 		user = repository.save(user);
-		LOG.info("Atualizado senha do usuário " + email + " com sucesso!");
+		LOG.info("Atualizado senha do usuário {} com sucesso.", email);
 	}
 
 	@Transactional
@@ -108,7 +120,7 @@ public class UserService implements UserDetailsService {
 		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 		updateUserRole(user, roleId);
 		user = repository.save(user);
-		LOG.info("Atualizado perfil do usuário " + id + " para o perfil " + roleId + " com sucesso!");
+		LOG.info("Atualizado perfil do usuário {} para o perfil {} com sucesso.", id, roleId);
 	}
 
 	@Transactional
@@ -180,7 +192,7 @@ public class UserService implements UserDetailsService {
 
 	private void updateData(User user, UserUpdatePasswordDTO entity) {
 		user.setPassword(passwordEncoder.encode(entity.getPassword()));
-		LOG.info("Atualizado senha do usuário");
+		LOG.info("Atualizado senha do usuário {}", user.getEmail());
 	}
 
 	private void updateUserRole(User user, Long roleId) {
@@ -213,9 +225,9 @@ public class UserService implements UserDetailsService {
 	}
 
 	private void validatePassword(String password) {
-		String passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+		String regex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
 
-		if (password.matches(passwordRegex)) {
+		if (!password.matches(regex)) {
 			throw new ValidMultiFormDataException(
 					"A senha deve conter no mínimo 8 caracteres, incluindo pelo menos 1 letra, 1 número e 1 caractere especial.");
 		}

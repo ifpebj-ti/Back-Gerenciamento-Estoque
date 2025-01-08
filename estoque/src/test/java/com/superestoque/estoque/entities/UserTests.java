@@ -15,7 +15,7 @@ public class UserTests {
 	private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 	@Test
-	public void userShouldHaveCorrectStructure() {
+	void userShouldHaveCorrectStructure() {
 
 		User entity = new User();
 		entity.setId(1L);
@@ -37,7 +37,7 @@ public class UserTests {
 	}
 
 	@Test
-	public void userConstructorShouldInitializeFieldsCorrectly() {
+	void userConstructorShouldInitializeFieldsCorrectly() {
 		User user = new User(1L, "John Doe", "johndoe@example.com", null, "password", true);
 
 		Assertions.assertEquals(1L, user.getId());
@@ -49,7 +49,7 @@ public class UserTests {
 	}
 
 	@Test
-	public void userConstructorFromDTOShouldInitializeFieldsCorrectly() {
+	void userConstructorFromDTOShouldInitializeFieldsCorrectly() {
 		UserDTO dto = new UserDTO(1L, "Jane Doe", "janedoe@example.com", null, true, false);
 		User user = new User(dto);
 
@@ -61,7 +61,7 @@ public class UserTests {
 	}
 
 	@Test
-	public void hasRoleShouldReturnTrueIfUserHasRole() {
+	void hasRoleShouldReturnTrueIfUserHasRole() {
 		Role role = new Role(1L, "ROLE_ADMIN");
 		User user = new User();
 		user.setRoles(Set.of(role));
@@ -70,7 +70,7 @@ public class UserTests {
 	}
 
 	@Test
-	public void hasRoleShouldReturnFalseIfUserDoesNotHaveRole() {
+	void hasRoleShouldReturnFalseIfUserDoesNotHaveRole() {
 		Role role = new Role(1L, "ROLE_USER");
 		User user = new User();
 		user.setRoles(Set.of(role));
@@ -79,7 +79,7 @@ public class UserTests {
 	}
 
 	@Test
-	public void getAuthoritiesShouldReturnGrantedAuthorities() {
+	void getAuthoritiesShouldReturnGrantedAuthorities() {
 		Role role1 = new Role(1L, "ROLE_ADMIN");
 		Role role2 = new Role(2L, "ROLE_USER");
 		User user = new User();
@@ -93,56 +93,56 @@ public class UserTests {
 	}
 
 	@Test
-	public void equalsShouldReturnTrueWhenIdIsEqual() {
+	void equalsShouldReturnTrueWhenIdIsEqual() {
 		User user1 = new User(1L, "John Doe", "johndoe@example.com", null, "password", true);
 		User user2 = new User(1L, "Jane Doe", "janedoe@example.com", null, "password", false);
 
-		Assertions.assertTrue(user1.equals(user2));
+		Assertions.assertEquals(user1, user2);
 	}
 
 	@Test
-	public void equalsShouldReturnFalseWhenIdIsDifferent() {
+	void equalsShouldReturnFalseWhenIdIsDifferent() {
 		User user1 = new User(1L, "John Doe", "johndoe@example.com", null, "password", true);
 		User user2 = new User(2L, "Jane Doe", "janedoe@example.com", null, "password", false);
 
-		Assertions.assertFalse(user1.equals(user2));
+		Assertions.assertNotEquals(user1, user2);
 	}
 
 	@Test
-	public void equalsShouldReturnFalseWhenComparingWithNull() {
+	void equalsShouldReturnFalseWhenComparingWithNull() {
 		User user = new User(1L, "John Doe", "johndoe@example.com", null, "password", true);
 
-		Assertions.assertFalse(user.equals(null));
+		Assertions.assertNotEquals(user, null);
 	}
 
 	@Test
-	public void equalsShouldReturnFalseWhenComparingWithDifferentClass() {
+	void equalsShouldReturnFalseWhenComparingWithDifferentClass() {
 		User user = new User(1L, "John Doe", "johndoe@example.com", null, "password", true);
 		String differentClassObject = "Different Class";
 
-		Assertions.assertFalse(user.equals(differentClassObject));
+		Assertions.assertNotEquals(user, differentClassObject);
 	}
 
 	@Test
-	public void isAccountNonExpiredShouldReturnFalse() {
+	void isAccountNonExpiredShouldReturnFalse() {
 		User user = new User();
 		Assertions.assertFalse(user.isAccountNonExpired());
 	}
 
 	@Test
-	public void isAccountNonLockedShouldReturnFalse() {
+	void isAccountNonLockedShouldReturnFalse() {
 		User user = new User();
 		Assertions.assertFalse(user.isAccountNonLocked());
 	}
 
 	@Test
-	public void isCredentialsNonExpiredShouldReturnFalse() {
+	void isCredentialsNonExpiredShouldReturnFalse() {
 		User user = new User();
 		Assertions.assertFalse(user.isCredentialsNonExpired());
 	}
 
 	@Test
-	public void isEnabledShouldReturnFalse() {
+	void isEnabledShouldReturnFalse() {
 		User user = new User();
 		Assertions.assertFalse(user.isEnabled());
 	}

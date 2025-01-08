@@ -3,7 +3,6 @@ package com.superestoque.estoque.controllers;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,8 +23,11 @@ import jakarta.validation.Valid;
 @RequestMapping(value = "/categories")
 public class CategoryController {
 
-	@Autowired
-	private CategoryService service;
+	private final CategoryService service;
+
+	public CategoryController(CategoryService service) {
+		this.service = service;
+	}
 
 	@GetMapping
 	@PreAuthorize("hasAnyRole('ADMIN','OPERATOR')")
@@ -40,7 +42,7 @@ public class CategoryController {
 	public ResponseEntity<CategoryDTO> insert(@Valid @RequestBody CategoryDTO dto) {
 		CategoryDTO entity = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(entity.getId()).toUri();
-		
+
 		return ResponseEntity.created(uri).body(entity);
 	}
 
