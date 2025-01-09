@@ -41,6 +41,7 @@ services:
 networks:
   app_network:
     driver: bridge
+    name: app_network
 volumes:
   mysql-data:
     driver: local
