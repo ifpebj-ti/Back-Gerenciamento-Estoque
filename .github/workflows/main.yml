@@ -138,6 +138,7 @@ jobs:
         echo "CLIENT_ID=${{ secrets.CLIENT_ID }}" >> .env
         echo "CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> .env
         echo "JWT_DURATION=${{ secrets.JWT_DURATION }}" >> .env
+        echo "CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}" >> .env
         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
 
     - name: Stop and Remove Existing Containers
