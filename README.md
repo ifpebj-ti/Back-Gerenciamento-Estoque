@@ -18,6 +18,12 @@
 
 
 
+
+
+
+
+
+
 # Super Estoque 2000
 Projeto desenvolvido para avaliação das cadeiras de tópicos avançados em programação II, tópicos avançados em redes I e segurança e validação.
 ## Como Rodar o Projeto
