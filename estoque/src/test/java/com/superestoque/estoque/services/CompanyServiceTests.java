@@ -90,7 +90,7 @@ class CompanyServiceTests {
 	void findAllUserByCompanyShouldThrowResourceNotFoundExceptionWhenCompanyDoesNotExist() {
 
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-			service.findAllUserByCompany();
+			service.findAllActiversUserByCompany();
 		});
 	}
 

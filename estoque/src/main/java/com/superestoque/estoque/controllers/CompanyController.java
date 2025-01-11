@@ -59,14 +59,25 @@ public class CompanyController {
 		return ResponseEntity.ok(entity);
 	}
 
-	@Operation(description = "This endpoint is used to return a list of users by company", summary = "Returns a list of company users", responses = {
+	@Operation(description = "This endpoint is used to return a list of active users by company", summary = "Returns a list of company users", responses = {
 			@ApiResponse(description = "Ok", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = UserDTO.class))),
 			@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Unauthorized\"}"))),
 			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Forbidden\"}"))) })
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(value = "/users")
 	public ResponseEntity<List<UserDTO>> getUserMyCompany() {
-		List<UserDTO> entities = service.findAllUserByCompany();
+		List<UserDTO> entities = service.findAllActiversUserByCompany();
+		return ResponseEntity.ok(entities);
+	}
+
+	@Operation(description = "This endpoint is used to return a list of desactive users by company", summary = "Returns a list of company users", responses = {
+			@ApiResponse(description = "Ok", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = UserDTO.class))),
+			@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Unauthorized\"}"))),
+			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n\"message\": \"Forbidden\"}"))) })
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping(value = "/users/desactive")
+	public ResponseEntity<List<UserDTO>> getDesactoversUserMyCompany() {
+		List<UserDTO> entities = service.findAllDesactiversUserByCompany();
 		return ResponseEntity.ok(entities);
 	}
 

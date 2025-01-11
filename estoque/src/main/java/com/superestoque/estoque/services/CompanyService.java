@@ -61,12 +61,29 @@ public class CompanyService {
 	}
 
 	@Transactional
-	public List<UserDTO> findAllUserByCompany() {
-		User user = authService.authenticated();
-		LOG.info("Usuário {} buscando usuários da empresa {}", user.getUsername(), user.getCompany().getId());
-		Company entity = repository.findById(user.getCompany().getId())
+	public List<UserDTO> findAllActiversUserByCompany() {
+		User authenticatedUser = authService.authenticated();
+		LOG.info("Usuário {} buscando usuários da empresa {}", authenticatedUser.getUsername(),
+				authenticatedUser.getCompany().getId());
+		Company entity = repository.findById(authenticatedUser.getCompany().getId())
 				.orElseThrow(() -> new ResourceNotFoundException("Empresa não encontrada"));
-		List<UserDTO> entities = entity.getUsers().stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
+		List<UserDTO> entities = entity.getUsers().stream().filter(x -> x.isStatus()).map(UserDTO::new)
+				.collect(Collectors.toList());
+
+		LOG.info("Usuários retornados com sucesso.");
+		return entities;
+	}
+
+	@Transactional
+	public List<UserDTO> findAllDesactiversUserByCompany() {
+		User authenticatedUser = authService.authenticated();
+		LOG.info("Usuário {} buscando usuários da empresa {}", authenticatedUser.getUsername(),
+				authenticatedUser.getCompany().getId());
+		Company entity = repository.findById(authenticatedUser.getCompany().getId())
+				.orElseThrow(() -> new ResourceNotFoundException("Empresa não encontrada"));
+		List<UserDTO> entities = entity.getUsers().stream().filter(x -> !x.isStatus()).map(UserDTO::new)
+				.collect(Collectors.toList());
+
 		LOG.info("Usuários retornados com sucesso.");
 		return entities;
 	}
