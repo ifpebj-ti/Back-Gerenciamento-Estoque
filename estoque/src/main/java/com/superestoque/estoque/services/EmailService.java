@@ -68,7 +68,7 @@ public class EmailService {
 	@Async("taskExecutor")
 	public void sendPasswordResetEmail(User user, String token) {
 		try {
-			String resetLink = "http://137.131.180.24/reset-password?token=" + token;
+			String resetLink = "http://137.131.180.24/newPass?token=" + token;
 
 			String resetDetails = """
 					<p>Olá, %s!</p>

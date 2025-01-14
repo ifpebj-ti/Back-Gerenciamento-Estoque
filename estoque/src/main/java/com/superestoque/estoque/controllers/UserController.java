@@ -163,7 +163,7 @@ public class UserController {
 					        "message": "Invalid email format"
 					    }
 					"""))) })
-	@PostMapping("/reset-password")
+	@PostMapping("/sendEmailResetPassword")
 	public ResponseEntity<Void> requestPasswordReset(@RequestParam String email) {
 		service.generatePasswordResetToken(email);
 		return ResponseEntity.noContent().build();
