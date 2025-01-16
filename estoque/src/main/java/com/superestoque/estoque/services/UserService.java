@@ -127,8 +127,10 @@ public class UserService implements UserDetailsService {
 	public void updateUser(String email, UserUpdateDTO entity) {
 		Optional<User> obj = repository.getByEmail(email);
 		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
-		validatePassword(entity.getPassword());
-		user.setPassword(passwordEncoder.encode(entity.getPassword()));
+		if (entity.getPassword().length() > 0) {
+			validatePassword(entity.getPassword());
+			user.setPassword(passwordEncoder.encode(entity.getPassword()));
+		}
 		if (entity.getPhoto() != null && entity.getPhoto().length > 0) {
 			user.setPhoto(entity.getPhoto());
 		}
