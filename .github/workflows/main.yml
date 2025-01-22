@@ -146,3 +146,7 @@ jobs:
 
     - name: Deploy Application with docker-compose
       run: docker-compose up -d
+      
+    - name: Remove old Docker images of backend
+      run: |
+        docker images brazf/estoque --format "{{.ID}}" | tail -n +2 | xargs -r docker rmi
