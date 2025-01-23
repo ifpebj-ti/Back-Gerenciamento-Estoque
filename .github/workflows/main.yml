@@ -27,7 +27,7 @@ jobs:
       continue-on-error: false
 
     - name: Upload Checkstyle Report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: checkstyle-report
         path: estoque/target/site/checkstyle.html    
@@ -49,7 +49,7 @@ jobs:
         mv estoque/target/site/jacoco/jacoco.csv jacoco.csv
       continue-on-error: false
     - name: Upload JaCoCo Report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: jacoco-report
         path: jacoco.csv
@@ -68,7 +68,7 @@ jobs:
         submodules: true
 
     - name: Download JaCoCo Report
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v2
       with:
         name: jacoco-report
   
@@ -111,7 +111,7 @@ jobs:
         file_pattern: ".github/badges/coverage-badge.svg README.md"
 
     - name: Upload Coverage Badge
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: coverage-badge
         path: .github/badges/coverage-badge.svg
