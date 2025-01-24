@@ -45,7 +45,7 @@ jobs:
       with:
         args: >
           -Dsonar.projectKey=super-estoque
-        projectBaseDir: ./src
+        projectBaseDir: ./estoque
         scanMetadataReportFile: ./src/.scannerwork/report-task.txt
   
     - name: Login Docker
