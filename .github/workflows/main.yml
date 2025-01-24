@@ -36,6 +36,17 @@ jobs:
       run: |
           cd estoque
           mvn clean package -X
+
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v4.2.1 # Ex: v4.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+      with:
+        args: >
+          -Dsonar.projectKey=super-estoque
+        projectBaseDir: ./estoque/src
+        scanMetadataReportFile: ./estoque/src/.scannerwork/report-task.txt
   
     - name: Login Docker
       run: docker login -u brazf -p ${{secrets.DOCKERHUB_TOKEN}}
