@@ -108,7 +108,7 @@ class CompanyControllerIT {
 				}));
 
 		result.andExpect(status().isNotFound());
-		result.andExpect(jsonPath("$.message").value("Empresa não encontrada."));
+		result.andExpect(jsonPath("$.message").value("Empresa não encontrada"));
 	}
 
 	@Test

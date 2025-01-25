@@ -1,6 +1,5 @@
 package com.superestoque.estoque.controllers;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -54,7 +53,7 @@ public class CompanyController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = "/{id}", consumes = "multipart/form-data")
 	public ResponseEntity<CompanyDTO> updateCompany(@PathVariable Long id, @RequestParam("name") String name,
-			@RequestParam("photo") MultipartFile photo) throws IOException {
+			@RequestParam("photo") MultipartFile photo) {
 		CompanyDTO entity = service.updateDataByUser(id, name, photo);
 		return ResponseEntity.ok(entity);
 	}

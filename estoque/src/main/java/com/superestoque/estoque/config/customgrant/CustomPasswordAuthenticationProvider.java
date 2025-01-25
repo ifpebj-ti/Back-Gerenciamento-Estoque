@@ -1,7 +1,6 @@
 package com.superestoque.estoque.config.customgrant;
 
 import java.security.Principal;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -69,7 +68,7 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String username = "";
 		String password = "";
-		Set<String> authorizedScopes = new HashSet<>();
+		Set<String> authorizedScopes;
 
 		CustomPasswordAuthenticationToken customPasswordAuthenticationToken = (CustomPasswordAuthenticationToken) authentication;
 		OAuth2ClientAuthenticationToken clientPrincipal = getAuthenticatedClientElseThrowInvalidClient(

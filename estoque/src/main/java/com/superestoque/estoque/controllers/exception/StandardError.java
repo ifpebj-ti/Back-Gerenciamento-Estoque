@@ -13,6 +13,7 @@ public class StandardError implements Serializable {
 	private String path;
 
 	public StandardError() {
+		/*Empty constructor*/
 	}
 
 	public Instant getTimestamp() {

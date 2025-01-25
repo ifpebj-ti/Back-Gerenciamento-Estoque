@@ -42,7 +42,7 @@ class CompanyServiceTests {
 	private MockMultipartFile invalidPhoto;
 
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp() {
 		existingCompanyId = 1L;
 		nonExistingCompanyId = 1000L;
 		company = CompanyFactory.createCompany();
@@ -58,7 +58,7 @@ class CompanyServiceTests {
 	}
 
 	@Test
-	void updateDataByUserShouldUpdateCompanyDataWhenValidPhoto() throws IOException {
+	void updateDataByUserShouldUpdateCompanyDataWhenValidPhoto() {
 		CompanyDTO result = service.updateDataByUser(existingCompanyId, "Updated Company", validPhoto);
 
 		Assertions.assertNotNull(result);
@@ -107,7 +107,7 @@ class CompanyServiceTests {
 
 	@Test
 	void updateDataShouldHandleIOException() throws IOException {
-		MockMultipartFile invalidPhoto = Mockito.mock(MockMultipartFile.class);
+		invalidPhoto = Mockito.mock(MockMultipartFile.class);
 		Mockito.when(invalidPhoto.getBytes()).thenThrow(IOException.class);
 
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {

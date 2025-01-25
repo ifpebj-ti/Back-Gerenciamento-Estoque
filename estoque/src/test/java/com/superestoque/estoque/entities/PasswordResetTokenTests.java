@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-public class PasswordResetTokenTests {
+class PasswordResetTokenTests {
 
 	@Test
 	void passwordResetTokenShouldHaveCorrectStructure() {
@@ -88,7 +88,7 @@ public class PasswordResetTokenTests {
 		PasswordResetToken token = new PasswordResetToken();
 		token.setId(1L);
 
-		Assertions.assertNotEquals(token, null);
+		Assertions.assertNotEquals(null, token);
 	}
 
 	@Test

@@ -110,7 +110,7 @@ public class UserService implements UserDetailsService {
 		if (user.isFirst_acess()) {
 			user.setFirst_acess(false);
 		}
-		user = repository.save(user);
+		repository.save(user);
 		LOG.info("Atualizado senha do usuário {} com sucesso.", email);
 	}
 
@@ -119,7 +119,7 @@ public class UserService implements UserDetailsService {
 		Optional<User> obj = repository.findById(id);
 		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 		updateUserRole(user, roleId);
-		user = repository.save(user);
+		repository.save(user);
 		LOG.info("Atualizado perfil do usuário {} para o perfil {} com sucesso.", id, roleId);
 	}
 
@@ -127,7 +127,7 @@ public class UserService implements UserDetailsService {
 	public void updateUser(String email, UserUpdateDTO entity) {
 		Optional<User> obj = repository.getByEmail(email);
 		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
-		if (entity.getPassword().length() > 0) {
+		if (!entity.getPassword().isEmpty()) {
 			validatePassword(entity.getPassword());
 			user.setPassword(passwordEncoder.encode(entity.getPassword()));
 		}

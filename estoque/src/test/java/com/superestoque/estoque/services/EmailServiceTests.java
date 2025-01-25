@@ -42,7 +42,7 @@ class EmailServiceTests {
 	private User adminUser;
 
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
 		adminUser = new User();
 		adminUser.setId(1L);
