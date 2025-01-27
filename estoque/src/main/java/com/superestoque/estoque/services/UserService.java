@@ -146,6 +146,7 @@ public class UserService implements UserDetailsService {
 
 	@Transactional
 	public void generatePasswordResetToken(String email) {
+		LOG.info("Gerando token de recuperação de senha para o usuário {}", email);
 		User user = repository.getByEmail(email)
 				.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
@@ -158,6 +159,7 @@ public class UserService implements UserDetailsService {
 		passwordResetToken.setUser(user);
 
 		passwordResetTokenRepository.save(passwordResetToken);
+		LOG.info("Enviando token de recuperação de senha para o usuário {}", email);
 
 		emailService.sendPasswordResetEmail(user, token);
 	}

@@ -4,7 +4,7 @@ INSERT INTO tb_role (authority) VALUES ('ROLE_OPERATOR');
 INSERT INTO tb_company (name, cnpj) VALUES ('Companhia das índias orientais','1234567891011');
 INSERT INTO tb_company (name, cnpj) VALUES ('Companhia das índias ocidentias','1110987654321');
 
-INSERT INTO tb_user (name, status, email, password, company_id, first_acess) VALUES ('Alex Brown', true, 'alex.brown@ifpe.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG', 1, true);
+INSERT INTO tb_user (name, status, email, password, company_id, first_acess) VALUES ('Alex Brown', true, 'fbf@discente.ifpe.edu.br', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG', 1, true);
 INSERT INTO tb_user (name, status, email, password, company_id, first_acess) VALUES ('Maria Green', true, 'maria.green@ifpe.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG', 1, false);
 INSERT INTO tb_user (name, status, email, password, company_id, first_acess) VALUES ('Jhon Peter', true, 'jhon.peter@ifpe.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG', 2, false);
 
