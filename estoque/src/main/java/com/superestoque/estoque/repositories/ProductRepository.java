@@ -13,8 +13,9 @@ import com.superestoque.estoque.entities.Product;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	@Query("SELECT DISTINCT p FROM Product p " + "LEFT JOIN FETCH p.categories c " + "WHERE p.company.id = :companyId "
-			+ "AND (:categoryId IS NULL OR c.id = :categoryId)")
+			+ "AND (:categoryId IS NULL OR c.id = :categoryId) "
+			+ "AND (:productName IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :productName, '%')))")
 	Page<Product> findByCompanyIdAndCategoryId(@Param("companyId") Long companyId, @Param("categoryId") Long categoryId,
-			Pageable pageable);
+			@Param("productName") String productName, Pageable pageable);
 
 }

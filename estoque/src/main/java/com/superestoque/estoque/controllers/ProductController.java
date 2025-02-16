@@ -47,8 +47,9 @@ public class ProductController {
 	@PreAuthorize("hasAnyRole('ADMIN','OPERATOR')")
 	@GetMapping
 	public ResponseEntity<Page<ProductDTO>> findAllProductsPagedByGroup(
-			@RequestParam(value = "categoryId", required = false) Long categoryId, Pageable pageable) {
-		Page<ProductDTO> products = service.findAllProductByCompanyIdPaged(pageable, categoryId);
+			@RequestParam(value = "categoryId", required = false) Long categoryId, 
+			@RequestParam(value = "productName", required = false) String productName, Pageable pageable) {
+		Page<ProductDTO> products = service.findAllProductByCompanyIdPaged(pageable, categoryId, productName);
 		return ResponseEntity.ok(products);
 	}
 
