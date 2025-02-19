@@ -148,7 +148,7 @@ class UserServiceTests {
 
 	@Test
 	void updatePasswordShouldUpdateUserPasswordWhenIdExists() {
-		UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO("newPassword123");
+		UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO("Fabio#123");
 
 		Assertions.assertDoesNotThrow(() -> {
 			service.updatePassword(existingEmail, dto);
@@ -224,7 +224,7 @@ class UserServiceTests {
 
 	@Test
 	void updatePasswordShouldEncodePasswordCorrectly() {
-		UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO("newPassword123");
+		UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO("Fabio#123");
 		service.updatePassword(existingEmail, dto);
 
 		Mockito.verify(repository, Mockito.times(1)).getByEmail(existingEmail);

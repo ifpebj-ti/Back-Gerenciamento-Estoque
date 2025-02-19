@@ -149,7 +149,7 @@ class UserControllerIT {
 	void updatePasswordShouldReturnNoContentWhenValid() throws Exception {
 		String accessToken = tokenUtil.obtainAccessToken(mockMvc, adminUsername, password);
 
-		UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("newPassword123");
+		UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("Fabio#123");
 
 		String jsonBody = objectMapper.writeValueAsString(updatePasswordDTO);
 

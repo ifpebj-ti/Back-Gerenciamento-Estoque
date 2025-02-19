@@ -106,6 +106,7 @@ public class UserService implements UserDetailsService {
 	public void updatePassword(String email, UserUpdatePasswordDTO entity) {
 		Optional<User> obj = repository.getByEmail(email);
 		User user = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+		validatePassword(entity.getPassword());
 		updateData(user, entity);
 		if (user.isFirst_acess()) {
 			user.setFirst_acess(false);
@@ -174,6 +175,7 @@ public class UserService implements UserDetailsService {
 		}
 
 		User user = passwordResetToken.getUser();
+		validatePassword(newPassword);
 		user.setPassword(passwordEncoder.encode(newPassword));
 		repository.save(user);
 
@@ -229,7 +231,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	private void validatePassword(String password) {
-		String regex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+		String regex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[\\W])[A-Za-z\\d\\W]{8,}$";
 
 		if (!password.matches(regex)) {
 			throw new ValidMultiFormDataException(
